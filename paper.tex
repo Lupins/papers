@@ -1,0 +1,191 @@
+% Template for ICASSP-2019 paper; to be used with:
+% spconf.sty - ICASSP/ICIP LaTeX style file, and
+% IEEEbib.bst - IEEE bibliography style file.
+% --------------------------------------------------------------------------
+\documentclass{article}
+\usepackage{spconf,amsmath,graphicx}
+\usepackage[tight,footnotesize]{subfigure} 
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[sort,nocompress]{cite}
+
+\DeclareUnicodeCharacter{2212}{-}
+
+% Example definitions.
+% --------------------
+\def\x{{\mathbf x}}
+\def\L{{\cal L}}
+
+% Title.
+% ------
+\title{<title>}
+
+\makeatletter
+\def\@name{<authors>}
+\makeatother
+
+\address{<address>}
+
+\begin{document}
+\ninept
+%
+\maketitle
+%
+\begin{abstract}
+\end{abstract}
+%
+\begin{keywords}
+\end{keywords}
+%
+\section{Introduction}
+\label{sec:intro}
+
+\section{Theoretical Background}
+\label{sec:back}
+
+\subsection{Optical Flow}
+\label{ssec:featSelection}
+
+\subsection{Pose Estimation}
+\label{ssec:featSelection}
+
+The main goal of a pose estimation feature is to take, as input, a video sequence that contains human movement and generate the key-points indicating the basic human anatomical positioning (Figure~\ref{fig:pose}). This process receives a frame that is then used on a feed-forward network able to predict both sets of 2D confidence maps ($S$) of body member positioning and 2D vector fields ($L$) that calculate the degree of association between these members. The set $S$ = ($S1$, $S2$, ..., $SJ$), being $J$ the number of body parts found, and $L$ = ($L1$, $L2$, ..., $LC$), being $C$ the number of limbs, are parsed by greedy inference. Lastly, the algorithm produces the 2D key-points indicating the posture of all human components of the frame~\cite{cao2016realtime}.
+
+\begin{figure}[!htb]
+\centering
+\subfigure{\includegraphics[height=2.6cm]{Images/pose_00013.jpg}} \hspace*{0.1cm}
+\subfigure{\includegraphics[height=2.6cm]{Images/pose_00020.jpg}} \hspace*{0.1cm}
+\subfigure{\includegraphics[height=2.6cm]{Images/pose_00025.jpg}}
+\caption{Pose estimation output examples.}
+\label{fig:pose}
+\end{figure}
+
+\subsection{Multi-Stream Model}
+\label{ssec:MModel}
+
+The multi-stream model concept~\cite{simonyan2014,wang2015towards}, used in this work, is a learning architecture (Figure~\ref{fig:multistream}). Therefore, we proposed the use of an individual isolated deep learning network for each of the hand-crafted features that were used. This singular approach focused on specializing a network according to each of its inputs.
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=8.5cm]{Images/multi_Diagram.eps}
+\caption{Basic structure of a multi-stream approach.}
+\label{fig:multistream}
+\end{figure}
+
+The main goal of this architecture is the possibility of working with the same input, however, the learning process employs distinct hand-crafted features regarding different combinations of information such as spatial, temporal, or spatial-temporal information. Accordingly, each feature-specialized network is considered a stream. Subsequent to the individual results achieved for each feature, an ensemble of these networks calculates the final classification results.
+
+\subsection{Ensemble}
+\label{ssec:esb}
+
+In order to improve accuracy, new architectures have been developed. Thus, a useful approach is ensemble. Therefore, by arranging an ensemble, a number of different learning approaches are joined~\cite{dietterich2000ensemble}. The architectures used in an ensemble can be either the same, for example all them being an association of VGGs, or a combination of distinct structures such as VGG16 and AlexNet. However, the concept of ensemble relies on training each of these networks according to a specific input. Finally, after each learner computes their individual results, the one that has the majority of votes will have its results associated to the input.
+
+\section{Multi-Stream Strategy for Fall Detection}
+\label{sec:model}
+
+The methodology proposed in this work aims to implement and evaluate an architecture based on convolutional neural networks (CNNs) to verify the existence of falls in videos. A VGG-16 was the CNN opted for this study since it is a classic convoluting method that can yield satisfactory results. Therefore, we consider detecting falls as a binary video classification problem.
+
+\begin{figure*}[!htb]
+\centering
+\includegraphics[width=14.0cm]{Images/Final_diagram.eps}
+\caption{Diagram of the proposed multi-stream strategy for fall detection.}
+\label{fig:methodology}
+\end{figure*}
+
+Since datasets related to specific actions, such as falling, do not contain enough information to fully train a CNN, it was necessary to undergo two prior training steps before training the network with the definite features (Figure~\ref{fig:methodology}). First, each of the VGG-16, used for the streams, were trained with the Imagenet dataset~\cite{deng2009imagenet}. Even though Imagenet is composed of RGB images, it is useful so that the network can learn basic representations. After this procedure, the UCF101 dataset~\cite{soomro2012ucf101} had its optical flow generated and used to train the temporal (optical flow) stream once again so the model could learn explicit movement. Once this pre-training process was completed the consecutive step consisted in fine-tuning the two last fully connected VGG-16 layers using dropout regularization. The data that is used to fine-tune these last layers are acquired from a feature generating process (Figure~\ref{fig:methodology}). 
+
+%\begin{figure}[!htb]
+%\centering
+%\includegraphics[height = 3.5cm]{Images/pre-train.eps}
+%\caption{Diagram of the proposed multi-stream strategy for fall detection.}
+%\label{fig:train}
+%\end{figure}
+
+As it can be seen in Figure~\ref{fig:methodology} the proposed hand-crafted features (optical flow, pose estimation and RGB) are generated; we used the Gunner-Farneback~\cite{lowhur2015dense} and Cao et al.~\cite{cao2016realtime} algorithms as the optical flow and pose extractors, respectively. For a first stream, concerning frame relational information, since falling is a fast event and does not occupy the entire video sequence, the generated optical flow images are stacked. This stacking process receives a block size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video and $L$ the size of the sliding block. This arrangement makes it possible for the CNN to have temporal relations calculated as well.The stacking procedure can be better understood by observing Figure~\ref{fig:stack}.
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[height=1.9cm]{Images/stack1.png}
+\caption{Optical flow stacking process representation proposed by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}. Sliding window of length 6.}
+\label{fig:stack}
+\end{figure}
+
+A second stream is focused on a spatial representation of the person's posture on a video. Therefore, with this stream the method was able to specialize a learner based on relevant calculations from joint and member positioning sequences, common to falling events. In addition, on account of deep neural networks being able, through their layers, to learn what are relevant features that it can use to describe an input, a third stream was constructed in our multi-stream learner. This perspective was used to train a stream of the architecture using the raw RGB pixel values as training data instead of extracting events from it, as mentioned previously. 
+
+After generating these hand-crafted features, the following step refers to a stream feature vector extractor. For each of the chosen hand-crafted streams, the generated images go through a modified CNN feature extractor so that a feature vector can be calculated and used in the fine-tuning process. This suggests that, after training the 14 first layers with both Imagenet and UCF101, the two last dense layers from the VGG-16 received the calculated feature vector, for each of the generated hand-crafted features, as inputs. This procedure permits the learning model to process numerous frame information and consider motion movement. 
+
+As a final part of our learner, it was imperative that the individual classifications achieved for a given input from each isolated stream were computed to obtain the final output. For this stage, an ensembling techniques was employed. This method was based on a Support Vector Machine (SVM), the stream outputs (between 0 and 1) are used to generate a ($x$, $y$, $z$) vector to be used, as input, to the SVM classifier. However, it is our understanding that the SVM is an additional learning process within the proposed architecture. Thus, it implies on being more costly than using an average method. 
+ 
+Although the optical flow learning architecture stream is based on the one used by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}, in this study a multi-stream model was used. Therefore, as discussed, instead of focusing the results on a single classifier, multiple pre-classifiers were adopted. In addition, rather than operating with one hand-crafted feature, three features are considered.
+
+\section{Experiments}
+\label{sec:experiments}
+
+ The datasets used in our experiments were the URFD~\cite{kwolek2014human} and FDD datasets. The URFD dataset encompasses a set of 70 videos being 30 videos of falls and 40 videos containing other activities that are considered not fall. FDD contains 191 realistic single camera surveillance videos from both elderly home environments, and office rooms. The primary metrics used for these evaluations were accuracy, specificity and sensitivity considering that most of the approaches presented in literature validate their systems using them.
+
+\begin{table*}[!htb]
+\renewcommand{\tabcolsep}{6.0mm}
+\centering
+\caption{FDD results for the best configuration values found by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}.}
+\label{tab:FDD}
+\begin{tabular}{lccc}
+\toprule
+ & Sensitivity (\%) & Specificity (\%) & Accuracy (\%) \\
+\midrule
+Multi-stream (OF+PE+RGB) & 99.9  & 98.32 & 98.43 \\
+Multi-stream (OF) & 99.9 & 96.17 & 96.43 \\
+Multi-stream (RGB)& 100	 & 79.02 & 80.52\\
+Multi-stream (PE) &	100	 & 60.15 & 63.01\\
+\midrule
+N\'u\~nez-Marcos et al.~\cite{nunez2017vision} & 99.0 & 97.00 & 97.00 \\
+Zerrouki and Houacine~\cite{zerrouki2018combined} & - & - & 97.02 \\
+Charfi et al.~\cite{charfi2012definition} & 98.0 & 99.60 & - \\
+\midrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[!htb]
+\renewcommand{\tabcolsep}{6.0mm}
+\centering
+\caption{URFD results for the best configuration values found by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}.}
+\label{tab:URFD}
+\begin{tabular}{lccc}
+\toprule
+ & Sensitivity (\%) & Specificity (\%) & Accuracy (\%) \\
+ \midrule
+Multi-stream (OF+PE+RGB) & 100 & 98.61 & 98.77 \\
+Multi-stream (OF) & 100 & 96.34 & 96.75 \\
+Multi-stream (RGB)& 100	& 96.61	& 96.99\\
+Multi-stream (PE) &	94.41 &	93,09 &	93,24\\
+\midrule
+N\'u\~nez-Marcos et al.~\cite{nunez2017vision} & 100 & 92.00 & 95.00 \\
+Zerrouki and Houacine~\cite{zerrouki2018combined} & - & - & 96.88 \\
+Kwolek and Kepski~\cite{kwolek2015improving} & 100 & 92.50 & 95.71 \\
+\midrule
+\end{tabular}
+\end{table*}
+
+To the best of our knowledge, since there are no other works that use a frame stacking method as described in the previous section, and the basic architecture of a stream is similar, the main comparisons are made regarding N\'u\~nez-Marcos et al.~\cite{nunez2017vision} work. Results were also compared method-wise to Zerrouki and Houacine~\cite{zerrouki2018combined}, Kwolek and Kepski~\cite{kwolek2015improving} and Charfi et al.~\cite{charfi2012definition} since they have tested with the same datasets as ours.
+
+Experiments were conducted by considering N\'u\~nez-Marcos et al.~\cite{nunez2017vision} hyper-parameter best configurations, so that the studies could be easily compared. Hence, tests were performed by dividing the data into training and testing sets with 80\% and 20\%, respectively. Considering falling a threatening situation, the \textit{fall} class was given a weight of two instead of one. This means that it is more important to detect a fall rather than having a critical false negative result. Learning rate values were tested with $10^{−3}$ to $10^{−5}$. The batch sizes ranged between powers of 2 and experiments ran in 500 to 1000 epochs. The optimization used for the networks parameters was Adam. The results of the 5-fold shuffled cross-validation can be seen in Tables~\ref{tab:FDD} and~\ref{tab:URFD}.
+
+Although N\'u\~nez-Marcos et al.~\cite{nunez2017vision} did not use a shuffled 5-fold cross-validation to calculate the metric results and the optical flow image generator algorithm was different from the current approach, temporal tests were made considering a single stream using our optical flow and metrics so the results could be directly compared (Multi-stream (OF) row in Tables~\ref{tab:FDD} and~\ref{tab:URFD}). As it was presented in Tables~\ref{tab:FDD} and~\ref{tab:URFD}, our multi-stream learning model with three streams was capable of performing better than the other approaches.
+
+The best configuration for this comparison was found when the learning rate value was tested with $10^{−4}$, batch size of 1024, \textit{fall} class with weight 2 and the optical flow sliding block with size 10. Further improvements can be seen since the best results found in N\'u\~nez-Marcos et al.~\cite{nunez2017vision} ran with about 3000 epochs compared to their work, that is, 500.
+
+In Tables~\ref{tab:FDD} and~\ref{tab:URFD}, it is also possible to analyze the performance of our multi-stream proposal using a single stream. Although not many experiments were focused on improving the results for the individual stream, it can be observed that the isolated learners did not perform as good as the associated ones with these hyper-parameters. However, this proves that multi-stream model can assist on classification since an outlier result yielded by one of the streams can be corrected based on the other streams results.
+
+Considering the data set classification, it is clear that the multi-stream with three streams used for this study outperformed the single VGG-16, the hidden Markov model, the SVM and the KNN methods used in N\'u\~nez-Marcos et al.~\cite{nunez2017vision}, Zerrouki and Houacine~\cite{zerrouki2018combined}, Charfi et al.~\cite{charfi2012definition}, and Kwolek and Kepski~\cite{kwolek2015improving}, respectively.
+
+\section{Conclusions and Future Work}
+\label{sec:conclusion}
+
+In this work, we proposed and evaluated a multi-stream learning model based on convolutional neural networks to cope with a binary falling classification problem. Therefore, our approach consisted in extracting hand-crafted high-level features (optical flow, pose estimation) and the RGB video data itself from public data set videos and use each as an input for a distinct VGG-16 classifier. Results have demonstrated to be better than other similar literature works in most of the calculated metrics. 
+
+It is our understanding that a multi-stream model can assist on classification since an outlier result outputted by one of the streams can be corrected based on the other streams results. Using hand-crafted high-level features also assisted in covering unnecessary information from the video frames such as the background and other unimportant details. Therefore, the network could learn specific movement and posture related features. Moreover, these features can also assist on identity concealing if necessary.
+
+For future work, we intend to continue investigating relevant high-level features used for fall detection. In addition, studies will be conducted to testing better hyper-parameters for the individual learners and use other architectures for each stream. Finally, experimentation will be done considering our method's general applicability.
+
+\bibliographystyle{IEEEbib}
+\bibliography{paper}
+
+\end{document}
