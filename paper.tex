@@ -1,84 +1,184 @@
-% Template for ICASSP-2019 paper; to be used with:
-% spconf.sty - ICASSP/ICIP LaTeX style file, and
-% IEEEbib.bst - IEEE bibliography style file.
-% --------------------------------------------------------------------------
-\documentclass{article}
-\usepackage{spconf,amsmath,graphicx}
-\usepackage[tight,footnotesize]{subfigure} 
-\usepackage{booktabs}
-\usepackage[utf8]{inputenc}
-\usepackage[sort,nocompress]{cite}
-
-\DeclareUnicodeCharacter{2212}{-}
-
-% Example definitions.
-% --------------------
-\def\x{{\mathbf x}}
-\def\L{{\cal L}}
-
-% Title.
-% ------
-\title{<title>}
-
-\makeatletter
-\def\@name{<authors>}
-\makeatother
-
-\address{<address>}
-
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
-\ninept
-%
-\maketitle
-%
-\begin{abstract}
-\end{abstract}
-%
-\begin{keywords}
-\end{keywords}
-%
-\section{Introduction}
-\label{sec:intro}
 
-\section{Theoretical Background}
-\label{sec:back}
+\title{Paper Title*\\
+\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address}
+\and
+\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address}
+\and
+\IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address}
+\and
+\IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address}
+}
+
+\maketitle
+
+\begin{abstract}
+This document is a model and instructions for \LaTeX.
+This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
+or Math in Paper Title or Abstract.
+\end{abstract}
+
+\begin{IEEEkeywords}
+component, formatting, style, styling, insert
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+\section{Related Work}
+
+\section{Background}
 
 \subsection{Optical Flow}
-\label{ssec:featSelection}
 
-\subsection{Pose Estimation}
-\label{ssec:featSelection}
+\subsection{Saliency}
 
-\subsection{Multi-Stream Model}
-\label{ssec:MModel}
+\section{Our Method}
 
-\subsection{Ensemble}
-\label{ssec:esb}
-
-\section{Multi-Stream Strategy for Fall Detection}
-\label{sec:model}
+\color{red}
+\centering
+\textbf{\textit{MAYBE}}
+\color{black}
 
 \section{Experiments}
-\label{sec:experiments}
 
-Our method was evaluated in two publicly available datasets: URFD~\ref{} and FDD~\ref{}. URFD dataset provides 70 videos and corresponding annotations from controlled laboratory environment.
+Our experiments were performed on two publicly available datasets, \textit{URFD}~\cite{kepski2014human} and \textit{FDD}~\cite{charfi2013optimised}.
 
-% This dataset captures 11 professional actors performing in 15 scenarios under 4 different viewpoints. Moreover, there are three popular data partition protocols for this benchmark in the literature.
+\paragraph{URFD} dataset contains 70 videos: (i) 30 videos of falls; and (ii) 40 videos of daily living activities, recorded from a top-down and side view perspective by two Microsoft Kinect cameras. Each frame is labeled in three categories, whether the person is lying on the ground, not lying on the ground or in an intermediate pose.
+\paragraph{FDD} dataset is composed of 191 videos of which 107 are falls, recorded from a surveillance camera perspective by a single RGB camera. With every frame annotated between fall and not fall.
 
-Metrics used were accuracy, specificity and sensitivity.
+For the sake of comparison with other works in the literature we evaluated our method by three metrics: (i) Sensitivity reflecting the number of true positives, (ii) Specificity also known as the true negative rate, and (iii) Accuracy representing the overall performance of the method.
 
-80-20
+We experimented with different class weights, and with further tunning of the hyper parameters we were able to set all classes with the same weight.
 
-streams
+learning rate 0.0001, kfold 5, minibatches of 1024, 500 epochs, optimization with adam, each fold result for the three stream combination
 
-hyperparameters
+The ensemble was performed by the svm approach discussed in section
+
+Compared ensembles techniques, SVM vs avarage
+
+Each individual stream does not perform greatly when used alone, but the ensemble of them has a significant improved result
+
+And the following results were obtained in the FDD dataset
+
+The false negative cases must be taken care since they would be responsible for serious injuries and such
+
+The following results were obatined in the URFD dataset
+
+\begin{table*}[t]
+\centering
+\caption{URFD comparison between individuas streams and ensemble.}
+\label{tab:urfd-ensem}
+\begin{tabular}{llcccl}
+\hline
+ &  & Sensitivity (\%) & Specificity (\%) & Accuracy (\%) &  \\ \hline
+ & Multi-stream (OF+RGB+Sal) & \textbf{100} & \textbf{98.77} & \textbf{98.84} &  \\
+ & Single-stream (OF) & \textbf{100} & 97.42 & 97.57 &  \\
+ & Single-stream (RGB) & \textbf{100} & 96.35 & 96.56 &  \\
+ & Single-stream (Sal) & 93.67 & 93.39 & 93.40 & \\ \hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{URFD comparison between results.}
+\label{tab:urfd-our-their}
+\begin{tabular}{llcccl}
+\hline
+ &                              & Sensitivity (\%) & Specificity (\%) & Accuracy (\%)  &  \\ \hline
+ & Ours                         & \textbf{100}      & \textbf{98.77}   & \textbf{98.84} &  \\
+ & N\'u\~nez-Marcos et al.~\cite{nunez2017vision}      & \textbf{100}      & 92.00            & 95.00          &  \\
+ & Zerrouki and Houacine~\cite{zerrouki2018vision}  & -                & -                & 96.88          &  \\
+ & Bhandari et al.~\cite{bhandari2017novel}  & 96.66                & -                & 95.71          &  \\
+ & Harrou et al.~\cite{harrou2017vision}  & -                & -                & 96.66          &  \\
+ & Sase et al.~\cite{sase2018human}  & 81.00                & -                & 90.00          &  \\
+ & Kwolek and Kepski~\cite{kepski2014human}            & \textbf{100}     & 92.50            & 95.71          &  \\ \hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{FDD comparison between individuas streams and ensemble.}
+\label{tab:fdd-ensem}
+\begin{tabular}{llcccl}
+\hline
+ &                      & Sensitivity (\%)  & Specificity (\%)  & Accuracy (\%)     &  \\ \hline
+ & Multi (OF+RGB+Sal)   & \textbf{99.43}    & \textbf{99.55}    & \textbf{99.51}    &  \\
+ & Single (OF)          & 99.07             & 99.12             & 99.11             &  \\
+ & Single (RGB)         & 98.85             & 98.41             & 98.55             &  \\
+ & Single (Sal)         & 88.39             & 92.40             & 91.25             & \\ \hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{FDD comparison between results.}
+\label{tab:fdd-our-their}
+\begin{tabular}{llcccl}
+\hline
+ &                          & Sensitivity (\%)  & Specificity (\%)  & Accuracy (\%)     & \\ \hline
+ & Ours                     & \textbf{99.43}    & 99.55             & \textbf{99.51}    & \\
+ & N\'u\~nez-Marcos et al.~\cite{nunez2017vision}  & 99.0              & 97.00             & 97.00             & \\
+ & Zerrouki and Houacine~\cite{zerrouki2018vision}    & -                 & -                 & 97.02             & \\
+ & Harrou et al.~\cite{harrou2017vision}    & -                 & -                 & 97.02             & \\
+ & Charfi et al.~\cite{charfi2013optimised}            & 98.0              & \textbf{99.60}    & -                 & \\ \hline
+\end{tabular}
+\end{table*}
+
+ It is worth nothing that in health segments, as a general rule it is usually preferred to accuse a false negative over a false positive, for instance it is considered that a HIV test with a false positive result will cause major distress on the patient's life, and if that result were a false negative, eventually the decease shymtons would demand another test. This general rule doesn't stand in our scenario, even tough a false positive would trigger a help dispatch which could cause some hassle to the patient, the aftereffects of a fall are related to the time between a fall and the help arrival, as observed by et al.~\cite{}.
+ 
+\section{Future Work}
 
 
 
-\section{Conclusions and Future Work}
-\label{sec:conclusion}
+\section*{Acknowledgment}
 
-\bibliographystyle{IEEEbib}
-\bibliography{paper}
+\begin{thebibliography}{00}
+\end{thebibliography}
+
+\color{red}
+\centering
+EIGHT PAGES
 
 \end{document}
