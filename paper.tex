@@ -72,7 +72,10 @@ component, formatting, style, styling, insert
 
 \subsection{Optical Flow}
 
-\subsection{Saliency}
+\subsection{Saliency Map}
+\label{sec:saliency}
+
+Why were you selected?
 
 \section{Method}
 
@@ -86,23 +89,27 @@ The selected datasets, further detailed in Section~\ref{sec:experiments}, posses
 
 The first 14 layers of the VGG-16 architecture were trained on the ImageNet~\cite{imagenet_cvpr09} dataset, and later on, these same layers were fine-tuned over the UCF101~\cite{soomro2012ucf101} dataset. The reasoning being that the network would initially learn low level features from the ImageNet classes, and focus these features on human activities with the UCF101 videos, Figure~\ref{fig:pre14}.
 
-The 14 initial layer's weights were then frozen, and the last two fully connected layers were separately fine-tuned, with dropout regularization, over the extracted hand-crafted features of the URFD~\cite{kepski2014human} and FDD~\cite{charfi2013optimised} datasets. This last fine-tuning was performed three times, one for each of the extracted hand-crafted features, Figure~\ref{fig:pos14}.
-
-\subsection{Hand-crafted Features}
-
-stacking MAYBE
+The 14 initial layer's weights were then frozen, and the last two fully connected layers were separately fine-tuned, with dropout regularization, over the extracted hand-crafted features of the URFD~\cite{kepski2014human} and FDD~\cite{charfi2013optimised} datasets. The last fine-tuning was performed three times, one for each of the extracted hand-crafted features, Figure~\ref{fig:pos14}.
 
 \subsection{Classification}
+\label{sec:classification}
 
-svm
+Wang et al.~\cite{wang2015towards} reported that networks employing multi-stream classifiers outperformed their single-streamed peers. Inspired on this finding, a SVM classifier fed with the outputs of each stream, between 0 and 1, generates a ($x$, $y$, $z$) vector. This vector is then fed to a second SVM that classifies between fall and not fall, Figure~\ref{fig:pos14}.
+
+\subsection{Streams Input}
+
+Two selected features were fed to the streams explained in Subsection~\ref{sec:classification}:(i) Optical Flow and (ii) Saliency Map. Furthermore, the RGB frame itself was fed to the third stream, Figure~\ref{fig:features}, given the neural networks capability to learn relevant features to describe their input.
+
+\paragraph{Optical Flow} represents the temporal relation between frames, and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video, Figure~\ref{fig:stacks, fig:features}. 
+\paragraph{Saliency Map} is composed of pixels varying from 0 to 1, and was fed as a gray-scale image to the network, Figure~\ref{fig:features}.
 
 \section{Experiments}
 \label{sec:experiments}
 
 Our experiments were performed on two publicly available datasets, \textit{URFD}~\cite{kepski2014human} and \textit{FDD}~\cite{charfi2013optimised}.
 
-\paragraph{URFD} dataset contains 70 videos: (i) 30 videos of falls; and (ii) 40 videos of daily living activities, recorded from a top-down and side view perspective by two Microsoft Kinect cameras. Each frame is labeled in three categories, whether the person is lying on the ground, not lying on the ground or in an intermediate pose.
-\paragraph{FDD} dataset is composed of 191 videos of which 107 are falls, recorded from a surveillance camera perspective by a single RGB camera. With every frame annotated between fall and not fall.
+\paragraph{URFD dataset} contains 70 videos: (i) 30 videos of falls; and (ii) 40 videos of daily living activities, recorded from a top-down and side view perspective by two Microsoft Kinect cameras. Each frame is labeled in three categories, whether the person is lying on the ground, not lying on the ground or in an intermediate pose.
+\paragraph{FDD dataset} is composed of 191 videos of which 107 are falls, recorded from a surveillance camera perspective by a single RGB camera. With every frame annotated between fall and not fall.
 
 For the sake of comparison with other works in the literature we evaluated our method by three metrics: (i) Sensitivity reflecting the number of true positives, (ii) Specificity also known as the true negative rate, and (iii) Accuracy representing the overall performance of the method.
 
