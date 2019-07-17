@@ -81,39 +81,39 @@ This paper is organized as follows. In Section~\ref{sec:method} we detail the pr
 % ~\cite{sigal2018interpretable} % salinecy
 
 
-% \section{Background}
-% \label{background}
+\section{Background}
+\label{background}
 
-% In this section, we describe a few relevant concepts applied in the proposed method.
+In this section, we describe a few relevant concepts employed in Section~\ref{sec:method}.
 
-% \subsection{Optical Flow}
-% \label{sec:opticalflow}
+\subsection{Optical Flow}
+\label{sec:opticalflow}
 
-% Optical flow is a hand-crafted feature that conveys movement information between the frames of a video, either by object movement or camera shift, Figure~\ref{fig:opticalflow}. Its ability to describe movement enables this feature to support the deep network towards detecting falls.
+Optical flow is a hand-crafted feature that conveys movement information between two frames of a video, either by object or camera movement, Figure~\ref{fig:opticalflow}. Its ability to describe movement enables this feature to support the temporal aspect of a fall event in a deep network.
 
-% The extraction process considers a video frame as $I$ and $I(x, y, t)$ a pixel in this frame. Another frame collected $dt$ time later, and the distance that the same pixel moved $(dx, dy)$, described in Equation~\ref{eq:of-dist}.
+The extraction process considers a video frame as $I$ and $I(x, y, t)$ a pixel in this frame. Another frame collected $dt$ time later, and the distance that the same pixel moved $(dx, dy)$ is described in Equation~\ref{eq:of-dist}.
 
-% Optical flow Equation~\ref{eq:of} is formed after applying a Taylor series approximation of right-hand side and dividing by $dt$, $f_t$ is the gradient given time, $f_x$, $f_y$, $u$, and $v$ are given in Equation~\ref{eq:of-grad}. Values of $u$ and $v$ can be achieved by different methods, such as the classical Lucas-Kanade~\cite{jain2018abnormal} or the one used in this work: Gunnar-Farneb{\"a}ck~\cite{lowhur2015dense}.
+Optical flow's Equation~\ref{eq:of} is formed after applying a Taylor series approximation of right-hand side and dividing by $dt$, $f_t$ is the gradient given time, $f_x$, $f_y$, $u$, and $v$ are given in Equation~\ref{eq:of-grad}. Values of $u$ and $v$ can be achieved by different methods, such as the classical Lucas-Kanade~\cite{jain2018abnormal} or the one used in this work: Gunnar-Farneb{\"a}ck~\cite{lowhur2015dense}.
 
-% \begin{equation}
-% \label{eq:of-dist}
-% I(x, y, t)=I(x+dx, y+dy, t+dt)
-% \end{equation}
-% \begin{equation}
-% \label{eq:of}
-% f_xu + f_yv + f_t=0
-% \end{equation}
-% \begin{equation}
-% \label{eq:of-grad}
-% f_x = \frac{\partial f}{\partial x}; \quad f_y = \frac{\partial f}{\partial y}u = \frac{\partial x}{\partial t}; \quad v = \frac{\partial y}{\partial t}
-% \end{equation}
+\begin{equation}
+\label{eq:of-dist}
+I(x, y, t)=I(x+dx, y+dy, t+dt)
+\end{equation}
+\begin{equation}
+\label{eq:of}
+f_xu + f_yv + f_t=0
+\end{equation}
+\begin{equation}
+\label{eq:of-grad}
+f_x = \frac{\partial f}{\partial x}; \quad f_y = \frac{\partial f}{\partial y}u = \frac{\partial x}{\partial t}; \quad v = \frac{\partial y}{\partial t}
+\end{equation}
 
-% \subsection{Saliency Map}
-% \label{sec:saliency}
+\subsection{Saliency Map}
+\label{sec:saliency}
 
-% Saliency was envisioned as a visualizing technique to understand the learning process behind a deep network. It can be extracted in many ways, one of those is the practice of feeding a image $I$ to the network and its class label $c$, freeze the weights on the network and compute the gradients of $c$ with respect to the pixels of $I$. Consider $S_c(I)$ to be the class score function for an image $I$ and, for this simple explanation, that it is a simple linear function, $S_c(I) = w_c^{T} + b_c$. With $w$ being the weights of the network and $b$ the bias, it is possible to see that the magnitude of elements of $w$ affects the importance of the corresponding pixels in $I$ for class $c$.
+Saliency maps were envisioned as a visualizing technique to understand the learning process behind a deep network. It can be extracted in many ways, one of those being the practice of feeding an image $I$ and its class label $c$ to the network, then, freezing the weights on the network and compute the gradients of $c$ with respect to the pixels of $I$. Consider $S_c(I)$ to be the class score function for an image $I$ and, for this simple explanation, that it is a simple linear function, $S_c(I) = w_c^{T} + b_c$. With $w$ being the weights of the network and $b$ the bias, it is possible to see that the magnitude of elements of $w$ affects the importance of the corresponding pixels in $I$ for class $c$.
 
-% The saliency map was chosen as a stream for its spatial relation to the frame, as the raw RGB frames are prone to interference, for instance from brightness variation, we believe the saliency is capable to overcome these variables. This work's saliency extractor is implemented after the paper of Sundararajan et al.~\cite{sundararajan2017axiomatic}.
+The saliency map was chosen as a stream for its spatial relation to the frame, as the raw RGB frames are prone to interference, for instance from brightness variation, we believe the saliency is capable to overcome these variables. This work's saliency extractor is implemented after the paper of Sundararajan et al.~\cite{sundararajan2017axiomatic}.
 
 \section{Method}
 \label{sec:method}
@@ -143,8 +143,8 @@ The first 14 layers of the VGG-16 architecture were trained on the ImageNet~\cit
 The 14 initial layer's weights were then frozen, and the last two fully connected layers were separately fine-tuned, with dropout regularization, over the extracted hand-crafted features of the URFD~\cite{kepski2014human} and FDD~\cite{charfi2013optimised} datasets. The last fine-tuning was performed three times, one for each of the extracted hand-crafted features, Figure~\ref{fig:pos14}.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=\linewidth]{figures/overview.png}}
-\caption{Methodology overview.}
+\centerline{\includegraphics[width=0.4\linewidth]{figures/pos14.png}}
+\caption{Fully connected layers training.}
 \label{fig:pos14}
 \end{figure}
 
