@@ -111,9 +111,10 @@ f_x = \frac{\partial f}{\partial x}; \quad f_y = \frac{\partial f}{\partial y}u 
 \subsection{Saliency Map}
 \label{sec:saliency}
 
-Saliency maps were envisioned as a visualizing technique to understand the learning process behind a deep network. It can be extracted in many ways, one of those being the practice of feeding an image $I$ and its class label $c$ to the network, then, freezing the weights on the network and compute the gradients of $c$ with respect to the pixels of $I$. Consider $S_c(I)$ to be the class score function for an image $I$ and, for this simple explanation, that it is a simple linear function, $S_c(I) = w_c^{T} + b_c$. With $w$ being the weights of the network and $b$ the bias, it is possible to see that the magnitude of elements of $w$ affects the importance of the corresponding pixels in $I$ for class $c$.
+Saliency maps were envisioned as a visualizing technique to understand the learning process behind a deep network. It can be extracted in many ways, one of those being the practice of feeding an image $I$ and its class label $c$ to the network, then, freezing the weights on the network and compute the gradients of $c$ with respect to the pixels of $I$. Consider $S_c(I)$ to be the class score function for an image $I$ and, for this simple explanation, that it is a simple linear function, $S_c(I) = w_c^{T} + b_c$. With $w$ being the weights of the network and $b$ the bias, it is possible to notice that the magnitude of elements of $w$ affects the importance of the corresponding pixels in $I$ with class $c$.
 
-The saliency map was chosen as a stream for its spatial relation to the frame, as the raw RGB frames are prone to interference, for instance from brightness variation, we believe the saliency is capable to overcome these variables. This work's saliency extractor is implemented after the paper of Sundararajan et al.~\cite{sundararajan2017axiomatic}.
+The saliency map was chosen as a stream for its spatial relation to the frame, as the raw RGB frames are prone to environment interference, and its performance in the works of Yang et al.~\cite{yang2019.} and Sigal et al.~\cite{sigal
+Sundararajan's et al.~\cite{sundararajan2017axiomatic} saliency method is used in this work.
 
 \section{Method}
 \label{sec:method}
