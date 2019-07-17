@@ -66,31 +66,34 @@ Multi-stream, optical flow, saliency, video, deep learning
 
 \section{Introduction}
 
-Ambient assisted living technologies have been rising in popularity as the world population grows older and more robust solutions became available. 
+With deteriorating health in advanced ages, even a minor fall can trigger a chain reaction of serious psychological and physical injuries to the elder population. Hence, the motivation for ambient assistant living solutions to both avoid falling from occurring and reducing the interval between a fall and help arrival. Many studies have been conducted to detect falls as soon as they happen, and can be split into two main categories. Hardware reliant solutions, such as accelerometers and IMUs. Which are met with frustration from the subjects, mainly towards forgetting to use the device, despite their fall detection performance. And vision-based solutions, which allied to machine learning techniques have shown promising results and, furthermore, not relying on the subject's setup to operate.
 
-\section{Related Work}
+Throughout the fall detection literature, techniques varies from threshold activion based, such as, Sase et al.~\cite{sase2018human} detecting regions of interest after a background subtraction, and a threshold activation function if the region of interest was bellow a third of the subject height in the frame. Bhandari et al.~\cite{bhandari2017novel} determined regions of interest via Shi-Tomasi, tracked them using Lucas-Kanade, and set a threshold on the region of interest's speed and motion. And Albawendi et al.~\cite{albawendi2018video} who used a threshold activation on silhouette shape. Another commonly used classification technique is support vector machine (SVM), used by Harrou et al.~\cite{harrou2017vision} that fed a feature extractor with the subject segmented from the frame. The extractor output would then be compared with a multivariate exponentially-weighted moving average (MEWMA), and classified by a SVM. Panahi et al.~\cite{panahi2018human} subtracted the background from depth images, fitted an ellipse in the subject's shape, and classified it with SVM. Abobakr et al.~\cite{abobakr2017skeleton} also subtracted the background from depth images, applied a random decision forest to estimate the subject's posture, and a SVM to classify it. Regarding the subject's privacy, both Edgcomb et al.~\cite{edgcomb2012automated} and Lin et al.~\cite{lin2013fall} investigated privacy-prone features, such as blurring, silhouetting, and covering the body with shapes. 
 
-% threshold or ROI
-Sase et al.~\cite{sase2018human} detected regions of interest using background subtraction. If the region of interest was bellow a threshold a fall event was accused, the threshold was on third of the subject height in the frame.
+~\cite{xu2018survey}
+~\cite{yang2019.} % saliency
+~\cite{sehairi2018elderly} % KNN
+In a mixed approach, Kwolek and Kepski~\cite{kwolek2015improving} used an accelerometer, that passed a given threshold would activate a K-nearest neighbors vision classifier to confirm the event. % KNN
+~\cite{mastorakis2018.} % simulated db
 
-Bhandari et al.~\cite{bhandari2017novel} used Shi-Tomasi to determine regions of interest and Lucas-Kanade to track them. If the speed and motion of the region of interest surpassed a threshold, a fall event was detected.
 
-% SVM
-Zerrouki and Houacine~\cite{zerrouki2018combined} subtracted the background, applied a curvelet transform on this information and used a support vector machine (SVM) to classify the human pose. The classified pose was then passed to a hidden markov model, that recognized the activity.
+~\cite{sigal2018interpretable} % salinecy
+
+% markov
+Zerrouki et al.~\cite{zerrouki2018combined} that after subtracting the background, applied a curvelet transform and served it to a SVM to classify the human pose, and then a hidden markov model to recognize the activity.
 
 Qian et al.~\cite{qian2017recognizing} also employed a hidden markov model to detect falls.
 
 Yu et al.~\cite{yu2009fall} utilized particle filtering with a background subtraction to track the subject head, and detect falls.
 
+% gaussian
 Yu et al.~\cite{yu2010robust} applyed a head tracking based on a gaussian model with a parzen window method to calculate density.
 
 Rougier et al.~\cite{rougier2011robust} detected falls with gaussian and human shape deformation.
 
-Regarding the subject's privacy, both Edgcomb et al.~\cite{edgcomb2012automated} and Lin et al.~\cite{lin2013fall} investigated privacy-prone features, such as bluring, silhouetting, and covering the body with shapes.
+~\cite{lu2018deep} % LSTM
 
-Searching for a higher sensitivity, Harrou et al.~\cite{harrou2017vision} segmented the subject in the video and served it to a feature extractor. The extractor output would be compared with a employed multivariate exponentially-weighted moving average (MEWMA), and if it was considered alarming a SVM would then verify if a fall occured.
-
-In a mixed approach, Kwolek and Kepski~\cite{kwolek2015improving} used an accelerometer, that passed a given threshold would activate a K-nearest neighbors vision classifier to confirm the event.
+~\cite{huang2018video} % CNN
 
 % CNN
 N\'u\~nez-Marcos et al.~\cite{nunez2017vision} extracted dense optical flow (OF) from images and fed them to a VGG-16 convolutional neural network (CNN). The extracted optical flow was fed in stacks to create a temporal relation between frames.
@@ -240,6 +243,8 @@ Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} reports the results extra
 This paper proposes to detect human fall events, based on the employment of a multi-stream convolutional neural network. Each stream was served an extracted feature, them being: (i) optical flow, (ii) saliency map, and (iii) the RGB frame itself, the ensemble was a double SVM approach. The proposed method was tested on URFD and FDD datasets, and our solution outperformed the related literature, indicating that multi-stream approaches and the selected features can be useful to detect human fall events.
 
 It is worth discussing the selected features and some literature results. As et al.~\cite{chernbumroong2012elderly} noted that privacy concerns might arise on video-based approaches, the selected features are able to conceal one's identity. Despite these feature's performance, both optical flow and saliency map are timely and computational intensive to extract, which would halt their implementation in a real-time system. Considering this work's goal in exploring features to the fall detection problem, it is relevant to weight their extraction process against their results. And regarding other works in the literature, some seemed to dismiss the importance of the sensitivity metric, which quantifies the avoidance of false negatives. A World Health Organization report~\cite{who2007report}, enlightens the severity of an elderly fall, thus the importance of a high sensitivity metric.
+
+% Harrou et al.~\cite{harrou2017vision} procurou sensitivity
 
 Observing the results in Table~\ref{tab:urfd-our-their} and~\ref{tab:fdd-our-their}, it is possible to notice a saturation of these datasets, and as reported by et al.~\cite{chernbumroong2012elderly} systems trained on artificial environments did not perform as well on real-life scenarios. Therefore, the importance of future work to come up with a more extensive dataset that better resembles the actual application setup. Methods wise, as explained above, the exploration of cheaper features and deep networks that could generate comparable results, should also be focused on.
 
