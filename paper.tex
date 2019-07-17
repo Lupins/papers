@@ -120,6 +120,12 @@ This paper is organized as follows. In Section~\ref{sec:method} we detail the pr
 
 An ensemble of VGG-16s were employed and evaluated to classify fall and not fall in video sequences, as seen in Figure~\ref{fig:overview} and further detailed bellow.
 
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{figures/overview.png}}
+\caption{Methodology overview.}
+\label{fig:overview}
+\end{figure}
+
 % In this work we intended to employ and evaluate a CNN architecture capable of detecting the presence or not of falls in videos, thus approaching the problem as a binary classification. To this end, we select the CNN architecture VGG16, since it is well known, and yields satisfactory results. Furthermore, based on the results of Wang et al.~\cite{wang2015towards}, in which a multi-streamed CNN outperformed single-stream ones, a ensembled was also exerted to learn the influence of three selected streams, each stream fed with a hand-crafted feature, them being: (i) optical flow, (ii) rgb, and (iii) saliency map.
 
 \subsection{Transfer Learning}
@@ -128,7 +134,19 @@ The selected datasets, further detailed in Section~\ref{sec:experiments}, posses
 
 The first 14 layers of the VGG-16 architecture were trained on the ImageNet~\cite{imagenet_cvpr09} dataset, and later on, these same layers were fine-tuned over the UCF101~\cite{soomro2012ucf101} dataset. The reasoning being that the network would initially learn low level features from the ImageNet classes, and focus these features on human activities with the UCF101 videos, Figure~\ref{fig:pre14}.
 
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.9\linewidth]{figures/pre14.png}}
+\caption{Deep layers being trained by ImagetNet and UCF101.}
+\label{fig:pre14}
+\end{figure}
+
 The 14 initial layer's weights were then frozen, and the last two fully connected layers were separately fine-tuned, with dropout regularization, over the extracted hand-crafted features of the URFD~\cite{kepski2014human} and FDD~\cite{charfi2013optimised} datasets. The last fine-tuning was performed three times, one for each of the extracted hand-crafted features, Figure~\ref{fig:pos14}.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{figures/overview.png}}
+\caption{Methodology overview.}
+\label{fig:pos14}
+\end{figure}
 
 \subsection{Classification}
 \label{sec:classification}
