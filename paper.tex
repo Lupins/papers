@@ -68,72 +68,55 @@ Multi-stream, optical flow, saliency, video, deep learning
 
 With deteriorating health in advanced ages, even a minor fall can trigger a chain reaction of serious psychological and physical injuries to the elder population. Hence, the motivation for ambient assistant living solutions to both avoid falling from occurring and reducing the interval between a fall and help arrival. Many studies have been conducted to detect falls as soon as they happen, and can be split into two main categories. Hardware reliant solutions, such as accelerometers and IMUs. Which are met with frustration from the subjects, mainly towards forgetting to use the device, despite their fall detection performance. And vision-based solutions, which allied to machine learning techniques have shown promising results and, furthermore, not relying on the subject's setup to operate.
 
-Throughout the fall detection literature, techniques varies from threshold activion based, such as, Sase et al.~\cite{sase2018human} detecting regions of interest after a background subtraction, and a threshold activation function if the region of interest was bellow a third of the subject height in the frame. Bhandari et al.~\cite{bhandari2017novel} determined regions of interest via Shi-Tomasi, tracked them using Lucas-Kanade, and set a threshold on the region of interest's speed and motion. And Albawendi et al.~\cite{albawendi2018video} who used a threshold activation on silhouette shape. Another commonly used classification technique is support vector machine (SVM), used by Harrou et al.~\cite{harrou2017vision} that fed a feature extractor with the subject segmented from the frame. The extractor output would then be compared with a multivariate exponentially-weighted moving average (MEWMA), and classified by a SVM. Panahi et al.~\cite{panahi2018human} subtracted the background from depth images, fitted an ellipse in the subject's shape, and classified it with SVM. Abobakr et al.~\cite{abobakr2017skeleton} also subtracted the background from depth images, applied a random decision forest to estimate the subject's posture, and a SVM to classify it. Regarding the subject's privacy, both Edgcomb et al.~\cite{edgcomb2012automated} and Lin et al.~\cite{lin2013fall} investigated privacy-prone features, such as blurring, silhouetting, and covering the body with shapes. 
+Throughout the fall detection literature, techniques varies from threshold activation based, such as, Sase et al.~\cite{sase2018human} detecting regions of interest after a background subtraction, and a threshold activation function if the region of interest was bellow a third of the subject height in the frame. Bhandari et al.~\cite{bhandari2017novel} determined regions of interest via Shi-Tomasi, tracked them using Lucas-Kanade, and set a threshold on the region of interest's speed and motion. And Albawendi et al.~\cite{albawendi2018video} who used a threshold activation on silhouette shape. Another commonly used classification technique is support vector machine (SVM), used by Harrou et al.~\cite{harrou2017vision} that fed a feature extractor with the subject segmented from the frame. The extractor output would then be compared with a multivariate exponentially-weighted moving average (MEWMA), and classified by a SVM. Panahi et al.~\cite{panahi2018human} subtracted the background from depth images, fitted an ellipse in the subject's shape, and classified it with SVM. Abobakr et al.~\cite{abobakr2017skeleton} also subtracted the background from depth images, applied a random decision forest to estimate the subject's posture, and a SVM to classify it. Regarding the subject's privacy, both Edgcomb et al.~\cite{edgcomb2012automated} and Lin et al.~\cite{lin2013fall} investigated privacy-prone features, such as blurring, silhouetting, and covering the body with shapes. Deep neural approaches were explored by Lu et al.~\cite{lu2018deep} who employed a 3D convolutional neural network (CNN) followed by a long short-term memory (LSTM). Huang et al.~\cite{huang2018video} extracted the human pose with OpenPose and classified it with a VGG-16 architecture. N\'u\~nez-Marcos et al.~\cite{nunez2017vision} extracted the dense optical flow (OF) and also served it to a VGG-16. And Anishchenko et al.~\cite{anishchenko2018machine} employed a modified AlexNet as classifier. A few different approaches were also reported, such as, K-nearest neighbor classifiers by Sehairi et al.~\cite{sehairi2018elderly} and Kwolek et al.~\cite{kwolek2015improving}. Hidden markov model by Zerrouki et al.~\cite{zerrouki2018combined} and Qian et al.~\cite{qian2017recognizing}. Particle filtering by Yu et al.~\cite{yu2009fall}. And gaussian models by Yu et al.~\cite{yu2010robust} and Rougier et al.~\cite{rougier2011robust}. Furthermore Xu et al.~\cite{xu2018new} produced a survey on fall detections systems.
 
-~\cite{xu2018survey}
-~\cite{yang2019.} % saliency
-~\cite{sehairi2018elderly} % KNN
-In a mixed approach, Kwolek and Kepski~\cite{kwolek2015improving} used an accelerometer, that passed a given threshold would activate a K-nearest neighbors vision classifier to confirm the event. % KNN
-~\cite{mastorakis2018.} % simulated db
+This work's main contribution is the development and evaluation of hand-crafted features to be used in a multi-stream learning model. To this end, we compare the effectiveness of three features extracted from videos frames: (i) optical flow, (ii) saliency map, and (iii) RGB features. These features a fed to a three-stream VGG-16 architecture, and their results compared with the literature.
+
+This paper is organized as follows. In Section~\ref{sec:method} we detail the proposed three-stream methodology. In Section~\ref{sec:experiments} the performed experiments and their results are compared to other works in the literature. Moreover, in Section~\ref{sec:conclusion} we elaborate on some points and future work suggestions.
+
+% ~\cite{yang2019.} % saliency
+% ~\cite{mastorakis2018.} % simulated db
 
 
-~\cite{sigal2018interpretable} % salinecy
+% ~\cite{sigal2018interpretable} % salinecy
 
-% markov
-Zerrouki et al.~\cite{zerrouki2018combined} that after subtracting the background, applied a curvelet transform and served it to a SVM to classify the human pose, and then a hidden markov model to recognize the activity.
 
-Qian et al.~\cite{qian2017recognizing} also employed a hidden markov model to detect falls.
+% \section{Background}
+% \label{background}
 
-Yu et al.~\cite{yu2009fall} utilized particle filtering with a background subtraction to track the subject head, and detect falls.
+% In this section, we describe a few relevant concepts applied in the proposed method.
 
-% gaussian
-Yu et al.~\cite{yu2010robust} applyed a head tracking based on a gaussian model with a parzen window method to calculate density.
+% \subsection{Optical Flow}
+% \label{sec:opticalflow}
 
-Rougier et al.~\cite{rougier2011robust} detected falls with gaussian and human shape deformation.
+% Optical flow is a hand-crafted feature that conveys movement information between the frames of a video, either by object movement or camera shift, Figure~\ref{fig:opticalflow}. Its ability to describe movement enables this feature to support the deep network towards detecting falls.
 
-~\cite{lu2018deep} % LSTM
+% The extraction process considers a video frame as $I$ and $I(x, y, t)$ a pixel in this frame. Another frame collected $dt$ time later, and the distance that the same pixel moved $(dx, dy)$, described in Equation~\ref{eq:of-dist}.
 
-~\cite{huang2018video} % CNN
+% Optical flow Equation~\ref{eq:of} is formed after applying a Taylor series approximation of right-hand side and dividing by $dt$, $f_t$ is the gradient given time, $f_x$, $f_y$, $u$, and $v$ are given in Equation~\ref{eq:of-grad}. Values of $u$ and $v$ can be achieved by different methods, such as the classical Lucas-Kanade~\cite{jain2018abnormal} or the one used in this work: Gunnar-Farneb{\"a}ck~\cite{lowhur2015dense}.
 
-% CNN
-N\'u\~nez-Marcos et al.~\cite{nunez2017vision} extracted dense optical flow (OF) from images and fed them to a VGG-16 convolutional neural network (CNN). The extracted optical flow was fed in stacks to create a temporal relation between frames.
+% \begin{equation}
+% \label{eq:of-dist}
+% I(x, y, t)=I(x+dx, y+dy, t+dt)
+% \end{equation}
+% \begin{equation}
+% \label{eq:of}
+% f_xu + f_yv + f_t=0
+% \end{equation}
+% \begin{equation}
+% \label{eq:of-grad}
+% f_x = \frac{\partial f}{\partial x}; \quad f_y = \frac{\partial f}{\partial y}u = \frac{\partial x}{\partial t}; \quad v = \frac{\partial y}{\partial t}
+% \end{equation}
 
-Anishchenko et al.~\cite{anishchenko2018machine} employd a modified AlexNet to detect falls.
+% \subsection{Saliency Map}
+% \label{sec:saliency}
 
-\section{Background}
+% Saliency was envisioned as a visualizing technique to understand the learning process behind a deep network. It can be extracted in many ways, one of those is the practice of feeding a image $I$ to the network and its class label $c$, freeze the weights on the network and compute the gradients of $c$ with respect to the pixels of $I$. Consider $S_c(I)$ to be the class score function for an image $I$ and, for this simple explanation, that it is a simple linear function, $S_c(I) = w_c^{T} + b_c$. With $w$ being the weights of the network and $b$ the bias, it is possible to see that the magnitude of elements of $w$ affects the importance of the corresponding pixels in $I$ for class $c$.
 
-In this section, we describe a few relevant concepts applied in the proposed method.
-
-\subsection{Optical Flow}
-\label{sec:opticalflow}
-
-Optical flow is a hand-crafted feature that conveys movement information between the frames of a video, either by object movement or camera shift, Figure~\ref{fig:opticalflow}. Its ability to describe movement enables this feature to support the deep network towards detecting falls.
-
-The extraction process considers a video frame as $I$ and $I(x, y, t)$ a pixel in this frame. Another frame collected $dt$ time later, and the distance that the same pixel moved $(dx, dy)$, described in Equation~\ref{eq:of-dist}.
-
-Optical flow Equation~\ref{eq:of} is formed after applying a Taylor series approximation of right-hand side and dividing by $dt$, $f_t$ is the gradient given time, $f_x$, $f_y$, $u$, and $v$ are given in Equation~\ref{eq:of-grad}. Values of $u$ and $v$ can be achieved by different methods, such as the classical Lucas-Kanade~\cite{jain2018abnormal} or the one used in this work: Gunnar-Farneb{\"a}ck~\cite{lowhur2015dense}.
-
-\begin{equation}
-\label{eq:of-dist}
-I(x, y, t)=I(x+dx, y+dy, t+dt)
-\end{equation}
-\begin{equation}
-\label{eq:of}
-f_xu + f_yv + f_t=0
-\end{equation}
-\begin{equation}
-\label{eq:of-grad}
-f_x = \frac{\partial f}{\partial x}; \quad f_y = \frac{\partial f}{\partial y}u = \frac{\partial x}{\partial t}; \quad v = \frac{\partial y}{\partial t}
-\end{equation}
-
-\subsection{Saliency Map}
-\label{sec:saliency}
-
-Saliency was envisioned as a visualizing technique to understand the learning process behind a deep network. It can be extracted in many ways, one of those is the practice of feeding a image $I$ to the network and its class label $c$, freeze the weights on the network and compute the gradients of $c$ with respect to the pixels of $I$. Consider $S_c(I)$ to be the class score function for an image $I$ and, for this simple explanation, that it is a simple linear function, $S_c(I) = w_c^{T} + b_c$. With $w$ being the weights of the network and $b$ the bias, it is possible to see that the magnitude of elements of $w$ affects the importance of the corresponding pixels in $I$ for class $c$.
-
-The saliency map was chosen as a stream for its spatial relation to the frame, as the raw RGB frames are prone to interference, for instance from brightness variation, we believe the saliency is capable to overcome these variables. This work's saliency extractor is implemented after the paper of Sundararajan et al.~\cite{sundararajan2017axiomatic}.
+% The saliency map was chosen as a stream for its spatial relation to the frame, as the raw RGB frames are prone to interference, for instance from brightness variation, we believe the saliency is capable to overcome these variables. This work's saliency extractor is implemented after the paper of Sundararajan et al.~\cite{sundararajan2017axiomatic}.
 
 \section{Method}
+\label{sec:method}
 
 An ensemble of VGG-16s were employed and evaluated to classify fall and not fall in video sequences, as seen in Figure~\ref{fig:overview} and further detailed bellow.
 
@@ -154,9 +137,9 @@ Wang et al.~\cite{wang2015towards} reported that networks employing multi-stream
 
 \subsection{Streams Input}
 
-Two selected features were fed to the streams explained in Subsection~\ref{sec:classification}:(i) Optical Flow and (ii) Saliency Map. Furthermore, the RGB frame itself was fed to the third stream, Figure~\ref{fig:features}, given the neural networks capability to learn relevant features to describe their input.
+Two selected features were fed to the streams explained in Subsection~\ref{sec:classification}:(i) Optical Flow and (ii) Saliency Map. Furthermore, the RGB frame itself was fed to the third stream, given the neural networks capability to learn relevant features to describe their input.
 
-\paragraph{Optical Flow} represents the temporal relation between frames, and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video, Figure~\ref{fig:stacks, fig:features}. 
+\paragraph{Optical Flow} represents the temporal relation between frames, and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video, Figure~\ref{fig:stacks}. 
 \paragraph{Saliency Map} is composed of pixels varying from 0 to 1, and was fed as a gray-scale image to the network, Figure~\ref{fig:features}.
 
 \section{Experiments}
@@ -171,19 +154,19 @@ For the sake of comparison with other works we evaluated our method by three met
 
 Tables~\ref{tab:urfd-ensem} and~\ref{tab:urfd-our-their} shows the results obtained over the URFD dataset. In Table~\ref{tab:urfd-ensem} we compare each single-stream feature with their multi-stream counterpart. The higher single-stream accuracy was derived from the optical flow stream, at 97.57\%, and the multi-stream was still able to outperform it, at 98.84\%. Table~\ref{tab:urfd-our-their} compares our result with other works in the literature, whilst not all works measured their sensitivity and specificity, all of them reported their accuracy. Our method's accuracy and specificity performed better than theirs, and kept the same 100\% sensitivity.
 
-\begin{table*}[t]
+\begin{table}[]
 \centering
 \caption{URFD single-stream \textit{vs} multi-stream, decreasing accuracy.}
 \label{tab:urfd-ensem}
 \begin{tabular}{llcccl}
 \hline
- &                              & Sensitivity (\%)  & Specificity (\%)  & Accuracy (\%)     & \\ \hline
- & Multi-stream (OF+RGB+Sal)    & \textbf{100}      & \textbf{98.77}    & \textbf{98.84}    & \\
- & Single-stream (OF)           & \textbf{100}      & 97.42             & 97.57             & \\
- & Single-stream (RGB)          & \textbf{100}      & 96.35             & 96.56             & \\
- & Single-stream (Sal)          & 93.67             & 93.39             & 93.40             & \\ \hline
+ &  & Sens. (\%) & Spec. (\%) & Acc. (\%) &  \\ \hline
+ & OF + RGB + Sal & \textbf{100} & \textbf{98.77} & \textbf{98.84} &  \\
+ & Optical Flow & \textbf{100} & 97.42 & 97.57 &  \\
+ & RGB & \textbf{100} & 96.35 & 96.56 &  \\
+ & Saliency & 93.67 & 93.39 & 93.40 &  \\ \hline
 \end{tabular}
-\end{table*}
+\end{table}
 
 \begin{table*}[t]
 \centering
@@ -207,19 +190,19 @@ Tables~\ref{tab:urfd-ensem} and~\ref{tab:urfd-our-their} shows the results obtai
 
 Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} reports the results extracted from the FDD dataset. Homologous to the URFD report, Table~\ref{tab:fdd-ensem} compares each single-stream with the multi-stream approach. The multi-stream achieved 99.51\% accuracy, and the highest single-stream score was again the optical flow, with 99.11\%. When comparing our results with the literature, in Table~\ref{tab:fdd-our-their}, our's outperformed every other one, regarding accuracy and sensitivity. And was 0.05\% worse then Charfi's et al.~\cite{charfi2013optimised} specificity. Our results also confirmed the findings of Wang et al.~\cite{wang2015towards}, since each feature stream did not perform great on their own, but when applyed together they contributed to state of the art results towards fall detection.
 
-\begin{table*}[t]
+\begin{table}[]
 \centering
 \caption{FDD single-stream \textit{vs} multi-stream, decreasing accuracy.}
 \label{tab:fdd-ensem}
 \begin{tabular}{llcccl}
 \hline
- &                      & Sensitivity (\%)  & Specificity (\%)  & Accuracy (\%)     &  \\ \hline
- & Multi (OF+RGB+Sal)   & \textbf{99.43}    & \textbf{99.55}    & \textbf{99.51}    &  \\
- & Single (OF)          & 99.07             & 99.12             & 99.11             &  \\
- & Single (RGB)         & 98.85             & 98.41             & 98.55             &  \\
- & Single (Sal)         & 88.39             & 92.40             & 91.25             & \\ \hline
+ &  & Sens. (\%) & Spec. (\%) & Acc. (\%) &  \\ \hline
+ & OF + RGB + Sal & \textbf{99.43} & \textbf{99.55} & \textbf{99.51} &  \\
+ & Optical Flow & 99.07             & 99.12             & 99.11             &  \\
+ & RGB & 98.85             & 98.41             & 98.55             &  \\
+ & Saliency & 88.39             & 92.40             & 91.25             & \\ \hline
 \end{tabular}
-\end{table*}
+\end{table}
 
 \begin{table*}[t]
 \centering
@@ -239,6 +222,7 @@ Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} reports the results extra
 \end{table*}
  
 \section{Conclusion and Future Work}
+\label{sec:conclusion}
 
 This paper proposes to detect human fall events, based on the employment of a multi-stream convolutional neural network. Each stream was served an extracted feature, them being: (i) optical flow, (ii) saliency map, and (iii) the RGB frame itself, the ensemble was a double SVM approach. The proposed method was tested on URFD and FDD datasets, and our solution outperformed the related literature, indicating that multi-stream approaches and the selected features can be useful to detect human fall events.
 
