@@ -55,7 +55,7 @@ email address}
 \maketitle
 
 \begin{abstract}
-With falls being, at the same time more susceptible in advanced ages and the second most common cause of accidental death to elders, detecting falls became a necessary research topic to an aging population~\cite{who2007report}. To this effect, we proposed and evaluated the employment of a multi-stream approach to detect fall events. Three features (optical flow, saliency map, and RGB data) fed to each stream of a VGG-16 and classified by an SVM of whether there was or not a fall event. We experimented on two datasets URFD and FDD, achieving respectively 98.84\% and 99.51\% accuracy, outperforming the majority of reviewed solutions.
+With falls being at the same time more susceptible in advanced ages and the second most common cause of accidental death to elders, detecting falls became a necessary research topic to an aging population~\cite{who2007report}. To this effect, we proposed and evaluated the employment of a multi-stream approach to detect fall events. Three features (optical flow, saliency map, and RGB data) fed to each stream of a VGG-16 and classified by an SVM of whether there was or not a fall event. We experimented on two datasets URFD and FDD, achieving respectively 98.84\% and 99.51\% accuracy, outperforming the majority of reviewed solutions.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -129,7 +129,7 @@ The first 14 layers of the VGG-16 architecture were trained on the ImageNet~\cit
 \label{fig:pre14}
 \end{figure}
 
-We froze the 14 initial layer's weights, and fine-tuned the last two fully connected layers were fine-tuned, with dropout regularization. This last fine-tuning was performed three times, one for each of the extracted hand-crafted features, Figure~\ref{fig:pos14}.
+We froze the 14 initial layer's weights and fine-tuned the last two fully connected layers were fine-tuned, with dropout regularization. Each stream executed this last fine-tuning step, totaling three executions, Figure~\ref{fig:pos14}.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.4\linewidth]{figures/pos14.png}}
@@ -140,14 +140,26 @@ We froze the 14 initial layer's weights, and fine-tuned the last two fully conne
 \subsection{Classification}
 \label{sec:classification}
 
-Wang et al.~\cite{wang2015towards} reported that, networks employing multi-stream classifiers outperformed their single-streamed peers. Inspired on this finding, a SVM classifier fed with the outputs of each stream, vectors between 0 and 1, generates a ($x$, $y$, $z$) vector. This vector is then fed to a second SVM that classifies between fall and not fall, Figure~\ref{fig:overview}.
+Wang et al.~\cite{wang2015towards} reported that networks employing multi-stream classifiers outperformed their single-streamed peers. Inspired on this finding, an SVM classifier fed with the outputs of each stream, vectors between 0 and 1, generates a ($x$, $y$, $z$) vector. A second SVM uses this vector to classify between fall and not fall, Figure~\ref{fig:overview}.
 
 \subsection{Streams Input}
 
-Two selected features were fed to the streams explained in Subsection~\ref{sec:classification}:(i) Optical Flow and (ii) Saliency Map. Furthermore, given the neural networks capability to learn relevant features to describe their input, the RGB frame itself was fed to the third stream.
+The features Optical Flow and Saliency map were fed to the streams we explained in Subsection~\ref{sec:classification}, and furthermore, given the neural networks capability to learn relevant features to describe their input, the RGB frame itself was fed to the third stream.
 
-\paragraph{Optical Flow} represents the temporal relation between frames, and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames, as suggested by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video. 
-\paragraph{Saliency Map} is composed of pixels varying from 0 to 1, and was fed as a gray-scale image to the network.
+\paragraph{Optical Flow} represents the temporal relation between frames, and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames, as suggested by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video, Figure~\ref{fig:of} shows and extracted example.
+\paragraph{Saliency Map} is composed of pixels varying from 0 to 1, and was fed as a gray-scale image to the network, Figure~\ref{fig:sal} shows and extracted example.
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{figures/of.png}}
+\caption{A frame and its extracted optical flow.}
+\label{fig:of}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=\linewidth]{figures/sal.png}}
+\caption{A frame and its extracted saliency map.}
+\label{fig:sal}
+\end{figure}
 
 \section{Experiments}
 \label{sec:experiments}
@@ -157,10 +169,9 @@ Our experiments were performed on two publicly available datasets, \textit{URFD}
 \paragraph{URFD dataset} contains 70 videos: (i) 30 videos of falls; and (ii) 40 videos of daily living activities, recorded from a top-down and front view perspective by two Microsoft Kinect cameras. Each frame is labeled in three categories, if the person is lying on the ground, not lying on the ground, and in an intermediate pose.
 \paragraph{FDD dataset} is composed of 191 videos of which 143 are falls, recorded from a surveillance camera perspective by a single RGB camera. With every frame annotated between fall and not fall.
 
-For the sake of comparison with other works we evaluated our method by three metrics: (i) Sensitivity reflecting the true positive rate, (ii) Specificity also known as the true negative rate, and (iii) Accuracy representing the overall performance of the method. We used a learning rate of $10^{-4}$, 500 epochs, 5-fold cross-validation, minibatches of $2^{10}$, and Adam optimization. We also experimented with differents classes weights, however, with further tuning of the hyper-parameters we were able to keep both classes on the same weight. The ensemble was performed by the double-SVM approach explained in Section~\ref{sec:classification}.
+For the sake of comparison with other works we evaluated our method by three metrics: (i) Sensitivity reflecting the true positive rate, (ii) Specificity also known as the true negative rate, and (iii) Accuracy representing the overall performance of the method. We used a learning rate of $10^{-4}$, 500 epochs, 5-fold cross-validation, mini-batches of $2^{10}$, and Adam optimization. We also experimented with different classes weights, however, further tuning of the hyper-parameters we were able to keep both classes on the same weight. As explained in Section~\ref{sec:classification}, a double SVM is used to ensemble the outputs.
 
-Tables~\ref{tab:urfd-ensem} and~\ref{tab:urfd-our-their} shows the results obtained over the URFD dataset. In Table~\ref{tab:urfd-ensem} we compare each single-stream feature with their multi-stream counterpart. The higher single-stream accuracy was derived from the optical flow stream, at 97.57\%, and the multi-stream was still able to outperform it, at 98.84\%. Table~\ref{tab:urfd-our-their} compares our result with other works in the literature, whilst not all works measured their sensitivity
-and specificity, all of them reported their accuracy. Our method's accuracy and specificity performed better than most and kept the same 100\% sensitivity. Lu et al.~\cite{lu2018deep} was the only work to perform better than ours, and we believe the reason for such is the temporal importance to detect a fall event, and their usage of LSTM would better cater this relationship.
+Tables~\ref{tab:urfd-ensem} and~\ref{tab:urfd-our-their} shows the results obtained over the URFD dataset. In Table~\ref{tab:urfd-ensem} we compare each single-stream feature with their multi-stream counterpart. The optical flow single-stream acquired the highest accuracy, at 97.57\%, and the multi-stream was still able to outperform it, at 98.84\%. Table~\ref{tab:urfd-our-their} compares our result with other works in the literature, whilst not all works measured their sensitivity and specificity, all of them reported their accuracy. Our method's accuracy and specificity performed better than most and kept the same 100\% sensitivity. Lu et al.~\cite{lu2018deep} was the only work to perform better than ours, and we believe the reason for such is the temporal importance to detect a fall event, and their usage of LSTM would better cater this relationship.
 
 \begin{table}[]
 \centering
@@ -196,7 +207,7 @@ and specificity, all of them reported their accuracy. Our method's accuracy and 
 \end{tabular}
 \end{table*}
 
-Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} reports the results extracted from the FDD dataset. Homologous to the URFD report, Table~\ref{tab:fdd-ensem} compares each single-stream with the multi-stream approach. The multi-stream achieved 99.51\% accuracy, and the highest single-stream score was again the optical flow, with 99.11\%. When comparing our results with the literature, in Table~\ref{tab:fdd-our-their}, our's outperformed every other one, regarding accuracy and sensitivity. And was 0.05\% worse then Charfi's et al.~\cite{charfi2013optimised} specificity. Our results also confirmed the findings of Wang et al.~\cite{wang2015towards}, since each feature stream did not perform great on their own, but when applyed together they contributed to state of the art results towards fall detection.
+Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} reports the results extracted from the FDD dataset. Homologous to the URFD report, Table~\ref{tab:fdd-ensem} compares each single-stream with the multi-stream approach. The multi-stream achieved 99.51\% accuracy, and the highest single-stream score was again the optical flow, with 99.11\%. When comparing our results with the literature, in Table~\ref{tab:fdd-our-their}, our's outperformed every other one, regarding accuracy and sensitivity. And was 0.05\% worse then Charfi's et al.~\cite{charfi2013optimised} specificity. Our results also confirmed the findings of Wang et al.~\cite{wang2015towards} since each feature stream did not perform great on their own, but when applied together they contributed to state of the art results towards fall detection.
 
 \begin{table}[]
 \centering
@@ -232,9 +243,9 @@ Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} reports the results extra
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
 
-This paper proposes to detect human fall events, based on the employment of a multi-stream convolutional neural network. Each stream was served an extracted feature, them being: (i) optical flow, (ii) saliency map, and (iii) the RGB frame itself, the ensemble performed was a double SVM approach. The proposed method was tested on URFD and FDD datasets, and our solution outperformed the related literature in most cases, indicating that multi-stream approaches and the selected features can be useful to detect human fall events.
+This paper proposes to detect human fall events, based on the employment of a multi-stream convolutional neural network. Each stream was served an extracted feature, them being: (i) optical flow, (ii) saliency map, and (iii) the RGB frame itself, the double SVM performed the ensemble approach. e tested the proposed method on URFD and FDD datasets, and our solution outperformed the related literature in most cases, indicating that multi-stream approaches and the selected features can be useful to detect human fall events.
 
-It is worth discussing the selected features and some literature results. As et al.~\cite{chernbumroong2012elderly} noted that privacy concerns might arise on video-based approaches, the selected features are able to conceal one's identity. Despite these feature's performance, both optical flow and saliency map are timely and computational intensive to extract, which would halt their implementation in a real-time system. Considering this work's goal in exploring features to the fall detection problem, it is relevant to weight their extraction process against their results. And regarding other works in the literature, some seemed to dismiss the importance of the sensitivity metric, which quantifies the avoidance of false negatives. A World Health Organization report~\cite{who2007report}, enlightens the severity of an elderly fall, thus the importance of a high sensitivity metric.
+It is worth discussing the selected features and some literature results. As et al.~\cite{chernbumroong2012elderly} noted that privacy concerns might arise on video-based approaches, the selected features can conceal one's identity. Despite these feature's performance, both optical flow and saliency map are timely and computationally intensive to extract, which would halt their implementation in a real-time system. Considering this work's goal in exploring features to the fall detection problem, it is relevant to weight their extraction process against their results. And regarding other works in the literature, some seemed to dismiss the importance of the sensitivity metric, which quantifies the avoidance of false negatives. A World Health Organization report~\cite{who2007report}, enlightens the severity of an elderly fall, thus the importance of a high sensitivity metric.
 
 Observing the results in Table~\ref{tab:urfd-our-their} and~\ref{tab:fdd-our-their}, it is possible to notice a saturation of these datasets, and as also reported by et al.~\cite{chernbumroong2012elderly}, systems trained on artificial environments did not perform as well on real-life scenarios. Therefore, the importance of future work to come up with a more extensive dataset that better resembles the actual application setup, Mastorakis et al.~\cite{mastorakis2018fall} published a simulated dataset of fall events. Method wise, as explained above, the exploration of cheaper features and deep networks that could generate comparable results, should also be focused on.
 
