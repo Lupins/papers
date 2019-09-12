@@ -32,9 +32,13 @@ The many implemented techniques differentiate by their mask and the way they are
 \section{Results}
 
 \begin{figure}[htbp]
-\centerline{\includegraphics{figures/left2right/flo_color_juquinha.png}}
-\caption{Example of a figure caption.}
-\label{fig}
+\centerline{%
+		\setlength{\fboxsep}{1pt}%
+		\setlength{\fboxrule}{1pt}%
+		\fbox{\includegraphics[scale=0.8]{figures/left2right/flo_color_juquinha.png}}%
+	}%
+    \caption{Example of a figure caption.}
+    \label{fig}
 \end{figure}
 
 \subsection{Error function}
