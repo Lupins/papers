@@ -40,50 +40,47 @@ Throughout our experiments we aimed to explore the effects of dithering, while v
 We performed dithering on {\color{red}nine} images, some provided by the professor and some particularly obtained. The images were chosen to exhaust the algorithm and explore its weaknesses and strengths, specially the colored dithering. Figure~\ref{fig:input} presents a few samples of the chosen images.
 
 \begin{figure}[H]
-	\centering
-	\subfloat{
-		{
-			\includegraphics[scale=0.7]{figures/input/baboon}
-		}
-		\label{fig:baboon}
+\centering
+\subfloat{
+	{
+		\includegraphics[scale=0.7]{figures/input/bee}
 	}
-	\quad
-	\subfloat{
-		{
-			\includegraphics[scale=0.7]{figures/input/david}
-		}
-		\label{fig:david}
+	\label{fig:peppers}
+}
+\subfloat{
+	{
+		\includegraphics[scale=0.7]{figures/input/bee}
 	}
-	\quad
-	\subfloat{
-		{
-			\includegraphics[scale=0.7]{figures/input/juquinha}
-		}
-		\label{fig:juquinha}
+	\label{fig:peppers}
+}
+\quad
+\subfloat{
+	{
+		\includegraphics[scale=0.7]{figures/input/bee}
 	}
-	\quad
-	\subfloat{
-		{
-			\includegraphics[scale=0.7]{figures/input/bee}
-		}
-		\label{fig:bee}
+	\label{fig:peppers}
+}
+\subfloat{
+	{
+		\includegraphics[scale=0.7]{figures/input/bee}
 	}
-	\quad
-	\subfloat{
-		{
-			\includegraphics[scale=0.7]{figures/input/peppers}
-		}
-		\label{fig:peppers}
+	\label{fig:peppers}
+}
+\quad
+\subfloat{
+	{
+		\includegraphics[scale=0.7]{figures/input/bee}
 	}
-	\quad
-	\subfloat{
-		{
-			\includegraphics[scale=0.7]{figures/input/peppers}
-		}
-		\label{fig:peppers}
+	\label{fig:peppers}
+}
+\subfloat{
+	{
+		\includegraphics[scale=0.7]{figures/input/bee}
 	}
-	\caption{A sample of the images used in the experiments.}
-	\label{fig:input}
+	\label{fig:peppers}
+}
+\caption{A sample of the images used in the experiments.}
+\label{fig:input}
 \end{figure}
 
 We also experimented with three traversal methods, looping through the image from (i) left to right, top to bottom, (ii) right to left, bottom to top, and (iii) top to bottom, but every even row was looped left to right and every odd row was looped from right to left, seen in Figure~\ref{fig:traversal}. To traverse the images in these varying methods a few precautions had to be taken, since the chosen filters generates a particular effect, in which any pixel already dithered will be ignored to future error diffusion. We need to accommodate this effect on any traversal that differs from left to right, top to bottom, and we did so by tweaking with the filter's matrix to match the expected result, one example on Floyd and Steinberg can be seen in Table~\ref{tab:flo_inverse}.
@@ -132,7 +129,7 @@ In this section we present and discuss the results obtained from the methods dis
 
 \subsection{Color space}
 
-In this experiment we performed a colored dithering and a grayscaled one. We also used Floyd and Steinberg's erro diffusion
+In this experiment we performed a colored dithering and a grayscaled one. Although we are not exploring the effects of error diffusion and traversal direction, we also used Floyd and Steinberg's erro diffusion and traversed the image from left to right, top to bottom. Figure~\ref{fig:baboon_colorspace} shows the resulting dithering, in it we can observe that overall features of the image are kept, it is still possible to identify the baboon in frame, as it is the intention of dithering. But on a closer inspection it is also possible to notice a drop in quality of both images, also an expected effect, for instance the lower lip of the baboon has been filled with noise and mixes with the fur.
 
 \begin{figure}[H]
 	\centering
@@ -149,15 +146,154 @@ In this experiment we performed a colored dithering and a grayscaled one. We als
 		}
 		\label{fig:baboon_gray}
 	}
-	\caption{Traversal directions experimented on.}
+	\caption{Color and Grayscale dithering on Baboon.}
 	\label{fig:baboon_colorspace}
 \end{figure}
 
 \subsection{Dithering matrices}
 
+\begin{figure}[H]
+	\centering
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/flo_color_juquinha}
+		}
+		\label{fig:flo_color_juquinha}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/ste_color_juquinha}
+		}
+		\label{fig:ste_color_juquinha}
+	}
+    \quad
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/bur_color_juquinha}
+		}
+		\label{fig:bur_color_juquinha}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/sie_color_juquinha}
+		}
+		\label{fig:sie_color_juquinha}
+	}\quad
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/stu_color_juquinha}
+		}
+		\label{fig:stu_color_juquinha}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/jar_color_juquinha}
+		}
+		\label{fig:jar_color_juquinha}
+	}
+	\caption{Color Error Diffusion on Cat.}
+	\label{fig:color_error_diffusion}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/flo_gray_juquinha}
+		}
+		\label{fig:flo_gray_juquinha}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/ste_gray_juquinha}
+		}
+		\label{fig:ste_cgray_juquinha}
+	}
+    \quad
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/bur_gray_juquinha}
+		}
+		\label{fig:bur_gray_juquinha}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/sie_gray_juquinha}
+		}
+		\label{fig:sie_gray_juquinha}
+	}
+	\quad
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/stu_gray_juquinha}
+		}
+		\label{fig:stu_gray_juquinha}
+	}
+
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/jar_gray_juquinha}
+		}
+		\label{fig:jar_gray_juquinha}
+	}
+	\caption{Grayscale error diffusion on Cat.}
+	\label{fig:gray_error_diffusion}
+\end{figure}
+
 \subsection{Traversal directions}
 
+\begin{figure}[H]
+	\centering
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/flo_color_bee}
+		}
+		\label{fig:l2r_flo_color_bee}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/right2left/flo_color_bee}
+		}
+		\label{fig:r2l_flo_color_bee}
+	}
+	\quad
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/zigzag/flo_color_bee}
+		}
+		\label{fig:zz_flo_color_bee}
+	}
+	\caption{Color traversal direction on Girl.}
+	\label{fig:color_traversal_l2r}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/left2right/flo_gray_bee}
+		}
+		\label{fig:l2r_flo_gray_bee}
+	}
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/right2left/flo_gray_bee}
+		}
+		\label{fig:r2l_flo_gray_bee}
+	}
+	\quad
+	\subfloat{
+		{
+			\includegraphics[scale=0.7]{figures/zigzag/flo_gray_bee}
+		}
+		\label{fig:zz_flo_gray_bee}
+	}
+	\caption{Grayscale traversal direction on Girl.}
+	\label{fig:gray_traversal_l2r}
+\end{figure}
+
 \subsection{Error function}
+
 
 \section{Appendix I}
 \label{sec:appendix1}
