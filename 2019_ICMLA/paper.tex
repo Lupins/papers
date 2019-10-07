@@ -22,7 +22,7 @@
 \maketitle
 
 \begin{abstract}
-With falls being at the same time more susceptible in advanced ages and the second most common cause of accidental death to elders, detecting falls became a crucial research topic to an aging population~\cite{who2007report}. To this effect, we propose and evaluate the employment of a multi-stream approach to detect fall events. Three features (optical flow, saliency map, and RGB data) fed to each stream of a VGG-16 and classified by an SVM of whether there was or not a fall event. Experiments are conducted on two datasets, URFD and FDD, achieving accuracy rates of 98.84\% and 99.51\%, respectively, which outperforms the majority of the reviewed solutions.
+Human falls are at the same time more susceptible in advanced ages and the second most common cause of accidental death to elders, detecting falls became a crucial research topic to an aging population~\cite{who2007report}. To this effect, we propose and evaluate the employment of a multi-stream approach to detect fall events. Three features (optical flow, saliency map, and RGB data) fed to each stream of a VGG-16 and classified by an SVM of whether there was or not a fall event. Experiments are conducted on two datasets, URFD and FDD, achieving accuracy rates of 98.84\% and 99.51\%, respectively, which outperforms the majority of the reviewed solutions.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -30,9 +30,9 @@ Fall detection, multi-stream neural networks, optical flow, saliency, video, dee
 \end{IEEEkeywords}
 
 \section{Introduction}
-With deteriorating health in advanced ages, even a minor fall can trigger a chain reaction of serious psychological and physical injuries to the elder population. Hence, the motivation for ambient assistant living solutions to both avoids falling from occurring and reducing the interval between a fall and help arrival.\par
+Advanced ages will deteriorate an individual's health, and even a minor fall can trigger a chain reaction of serious psychological and physical injuries to the elder population. Hence, the motivation for ambient assistant living solutions to both avoid falling from occurring and reducing the interval between a fall and help arrival.\par
 The studies that detect falls as soon as they happen can be split into two main categories: hardware reliant solutions and vision based ones. The first one, which uses devices such as accelerometers and IMUs, has a satisfactory performance but are met with frustration from the subjects, mainly towards forgetting to use the device. Vision-based solutions, which allied to machine learning techniques, have shown promising results and, furthermore, do not rely on the subject wearing it.\par
-Throughout the fall detection literature, techniques vary from threshold activation based, such as Sase et al.~\cite{sase2018human} detecting regions of interest after background subtraction, and a threshold activation function if the region of interest was under a third of the subject height in the frame. Bhandari et al.~\cite{bhandari2017novel} determined regions of interest via Shi-Tomasi, tracked them using Lucas-Kanade and set a threshold on the region of interest's speed and motion and also Albawendi et al.~\cite{albawendi2018video} who used a threshold activation on a silhouette shape. Another commonly used classification technique is the support vector machine (SVM), used by Harrou et al.~\cite{harrou2017vision}, that fed a feature extractor with the subject segmented from the frame. They compared extractor output with a multivariate exponentially-weighted moving average (MEWMA) and classified by an SVM. Panahi et al.~\cite{panahi2018human} subtracted the background from depth images, fitted an ellipse in the subject's shape, and classified it with SVM. Abobakr et al.~\cite{abobakr2017skeleton} also subtracted the background from depth images, applied a random decision forest to estimate the subject's posture, and an SVM to classify it. Regarding the subject's privacy, both Edgcomb et al.~\cite{edgcomb2012automated} and Lin et al.~\cite{lin2013fall} investigated privacy-prone features, such as blurring, silhouetting, and covering the body with shapes. Lu et al.~\cite{lu2018deep} employed a 3D convolutional neural network (CNN) followed by a long short-term memory (LSTM). Huang et al.~\cite{huang2018video} extracted the human pose with OpenPose and classified it with a VGG-16 architecture. Núñez-Marcos et al.~\cite{nunez2017vision} extracted the dense optical flow (OF) and also served it to a VGG-16. Anishchenko et al.~\cite{anishchenko2018machine} employed a modified AlexNet as a classifier. A few different approaches were also reported, such as K-nearest neighbor classifiers by Sehairi et al.~\cite{sehairi2018elderly} and Kwolek et al.~\cite{kwolek2015improving}. Hidden Markov model by Zerrouki et al.~\cite{zerrouki2018combined} and Qian et al.~\cite{qian2017recognizing}. Particle filtering by Yu et al.~\cite{yu2009fall}, Gaussian models by Yu et al.~\cite{yu2010robust} and Rougier et al.~\cite{rougier2011robust}. Furthermore, Xu et al.~\cite{xu2018new} produced a survey on fall detections systems.\par
+Throughout the fall detection literature, techniques vary from threshold activation based, such as Sase et al.~\cite{sase2018human} detecting regions of interest after background subtraction, and a threshold activation function if the region of interest was under a third of the subject height in the frame. Bhandari et al.~\cite{bhandari2017novel} determined regions of interest via Shi-Tomasi, tracked them using Lucas-Kanade and set a threshold on the region of interest's speed and motion and also Albawendi et al.~\cite{albawendi2018video} who used a threshold activation on a silhouette shape. Another commonly used classification technique is the support vector machine (SVM), used by Harrou et al.~\cite{harrou2017vision}, that fed a feature extractor with the subject segmented from the frame. They compared extractor output with a multivariate exponentially-weighted moving average (MEWMA) and classified by an SVM. Panahi et al.~\cite{panahi2018human} subtracted the background from depth images, fitted an ellipse in the subject's shape, and classified it with SVM. Abobakr et al.~\cite{abobakr2017skeleton} also subtracted the background from depth images, applied a random decision forest to estimate the subject's posture, and an SVM to classify it. Regarding the subject's privacy, both Edgcomb et al.~\cite{edgcomb2012automated} and Lin et al.~\cite{lin2013fall} investigated privacy-prone features, such as blurring, silhouetting, and covering the body with shapes. Lu et al.~\cite{lu2018deep} employed a 3D convolutional neural network (CNN) followed by a long short-term memory (LSTM). Huang et al.~\cite{huang2018video} extracted the human pose with OpenPose and classified it with a VGG-16 architecture. N\'u\~nez-Marcos et al.~\cite{nunez2017vision} extracted the dense optical flow (OF) and also served it to a VGG-16. Anishchenko et al.~\cite{anishchenko2018machine} employed a modified AlexNet as a classifier. A few different approaches were also reported, such as K-nearest neighbor classifiers by Sehairi et al.~\cite{sehairi2018elderly} and Kwolek et al.~\cite{kwolek2015improving}. Hidden Markov model by Zerrouki et al.~\cite{zerrouki2018combined} and Qian et al.~\cite{qian2017recognizing}. Particle filtering by Yu et al.~\cite{yu2009fall}, Gaussian models by Yu et al.~\cite{yu2010robust} and Rougier et al.~\cite{rougier2011robust}. Furthermore, Xu et al.~\cite{xu2018new} produced a survey on fall detections systems.\par
 The main contribution of this work is the development and evaluation of handcrafted features in a multi-stream learning model. We compare the effectiveness of three features extracted from videos frames: (i) optical flow, (ii) saliency map, and (iii) RGB data. These features are fed to a three-stream VGG-16 architecture, and their results compared with the literature.\par
 We organized this paper as follows. In Section~\ref{sec:method}, we detail the proposed three-stream methodology for fall detection. In Section~\ref{sec:experiments}, we performed experiments and compared their results to other approaches available in the literature. Finally, in Section~\ref{sec:conclusion}, we conclude the work and suggest directions for future work.
 
@@ -50,12 +50,12 @@ In this section, we describe some relevant concepts related to the topic under i
 \label{fig:overview}
 \end{figure*}
 Optical flow is a handcrafted feature that conveys movement information between two frames of a video, either by object or camera movement. Its ability to describe movement enables this feature to support the temporal aspect of a fall event in a deep network.\par
-The extraction process considers a video frame as $I$ and $I(x, y, t)$ a pixel in this frame. Another frame collected $dt$ time later, and the distance that the same pixel moved $(dx, dy)$ is described in Equation~\ref{eq:of-dist}.
+The extraction process considers a video frame as $I$ and $I(x, y, t)$ a pixel in this frame. Another frame collected $dt$ time later, and the distance that the same pixel moved $(dx, dy)$ is described in Equation~\ref{eq:of-dist}.\par
 \begin{equation}
 \label{eq:of-dist}
 I(x, y, t)=I(x+dx, y+dy, t+dt)
 \end{equation}
-Equation~\ref{eq:of} is formed after applying a Taylor series approximation of right-hand side and dividing by $dt$, $f_t$ is the gradient given time, $f_x$ , $f_y$ , $u$, and $v$ are given in Equation~\ref{eq:of-grad}. Values of $u$ and $v$ can be achieved by different methods, such as the classical Lucas-Kanade~\cite{jain2018abnormal} or the one used in this work: Gunnar-Farnebäck~\cite{lowhur2015dense}.
+Equation~\ref{eq:of} is formed after applying a Taylor series approximation of right-hand side and dividing by $dt$, $f_t$ is the gradient given time, $f_x$ , $f_y$ , $u$, and $v$ are given in Equation~\ref{eq:of-grad}. Values of $u$ and $v$ can be achieved by different methods, such as the classical Lucas-Kanade~\cite{jain2018abnormal} or the one used in this work: Gunnar-Farneb\"ack~\cite{lowhur2015dense}.
 \begin{equation}
 \label{eq:of}
 f_xu + f_yv + f_t=0
@@ -74,12 +74,12 @@ The choice of saliency map as a stream is due to its spatial relation to the fra
 \section{Fall Detection Method}
 \label{sec:method}
 
-As further detailed in the following subsections, we used an ensemble of VGG-16s to classify between fall and not fall in video sequences. Figure~\ref{fig:overview} illustrates an overview of the proposed method.
+As further detailed in the following subsections, we used an ensemble of VGG-16s to classify between fall and not fall in video sequences. Since detecting falls needs to operate on real-time bases, we chose an architecture with depth to inference-speed balance, hence the VGG16 architecture. Figure~\ref{fig:overview} illustrates an overview of the proposed method.
 
 \subsection{Transfer Learning}
 
 The selected datasets, further detailed in Section~\ref{sec:experiments}, possess relatively few human fall samples in their videos, which would limit the CNNs learning capabilities to detect fall events. Hence, the importance of transfer learning.\par
-The first 14 layers of the VGG-16 architecture were trained on the ImageNet~\cite{imagenet_cvpr09} dataset and, later on, these same layers were fine-tuned over the UCF101~\cite{soomro2012ucf101} dataset. The reasoning being that the network would initially learn low-level features from the ImageNet classes, and focus these features on human activities with the UCF101 videos, Figure~\ref{fig:pre14}. Núñez-Marcos et al.~\cite{nunez2017vision} executed this step and released their weight files publicly.\par
+The first 14 layers of the VGG-16 architecture were trained on the ImageNet~\cite{imagenet_cvpr09} dataset and, later on, these same layers were fine-tuned over the UCF101~\cite{soomro2012ucf101} dataset. The reasoning being that the network would initially learn low-level features from the ImageNet classes, and focus these features on human activities with the UCF101 videos, Figure~\ref{fig:pre14}. N\'u\~nez-Marcos et al.~\cite{nunez2017vision} executed this step and released their weight files publicly.\par
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.9\linewidth]{figures/pre14.png}}
 \caption{Deep layers being trained on ImagetNet and UCF101.}
@@ -98,18 +98,18 @@ totaling three executions (Figure~\ref{fig:pos14}).
 \subsection{Classification}
 \label{sec:classification}
 
-Wang et al.~\cite{wang2015towards} reported that networks employing multi-stream classifiers outperformed their single-streamed peers. Inspired on this finding, an SVM classifier fed with the outputs of each stream, vectors between 0 and 1, generates a ($x$, $y$, $z$) vector. A second SVM uses this vector to classify between fall and not fall (Figure~\ref{fig:overview}).
+Wang et al.~\cite{wang2015towards} reported that networks employing multi-stream classifiers outperformed their single-streamed peers. Inspired on this finding, an SVM classifier was chosen for its inference speed over a neural network, again aiming to approximate the output to real-time. We used an SVM classifier fed with the outputs of each stream, vectors between 0 and 1, that generates a ($x$, $y$, $z$) vector. A second SVM uses this vector to classify between fall and not fall (Figure~\ref{fig:overview}). This double SVM approach is executed so that the first SVM will classify the input, and the second SVM will weight which stream or streams are more important to detect a fall event.
 
 \subsection{Streams Input}
 
 The optical flow and saliency map features were fed to the streams, explained in Subsection~\ref{sec:classification}. Furthermore, given the neural networks capability of learning relevant features to describe their input, the RGB frame itself was fed to the third stream.
-\paragraph{Optical Flow} represents the temporal relation between frames and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames, as suggested by Núñez-Marcos et al.~\cite{nunez2017vision}. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$ \}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video. Figure~\ref{fig:of} shows an extracted example.
+\paragraph{Optical Flow} represents the temporal relation between frames and to fully gather this property it was used as a stack of optical flows on top of a sliding window of frames, as suggested by N\'u\~nez-Marcos et al.~\cite{nunez2017vision}. The sliding window has a size of $L$ frames and gathers 2$L$ components ($L$ horizontal ($d_t^x$) + $L$ vertical ($d_t^y$) optical flow component vector fields) creating a stack $O$ = \{$d_t^x$, $d_t^y$, $d_{t+1}^x$, $d_{t+1}^y$, ..., $d_{t+L}^x$, $d_{t+L}^y$\}. The total number of stacks is given by $N$-$L$+$1$, where $N$ is the number of frames in a video. Figure~\ref{fig:of} shows an extracted example.
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth]{figures/of.png}}
 \caption{A frame and its extracted optical flow.}
 \label{fig:of}
 \end{figure}
-\paragraph{Saliency Map} is composed of pixels varying from 0 to 1, and was fed as a gray-scale image to the network. Figure~\ref{fig:sal} shows and extracted example.
+\paragraph{Saliency Map} represents the attention region in a frame, it was chosen over other techniques of silhouetting as it can focus on key regions in the human shape, instead of the whole foreground region of the frame. It is composed of pixels varying from 0 to 1 and was fed as a gray-scale image to the network. Figure~\ref{fig:sal} shows and extracted example.
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth]{figures/sal.png}}
 \caption{A frame and its extracted saliency map.}
@@ -124,10 +124,9 @@ datasets: URFD~\cite{kepski2014human} and FDD~\cite{charfi2013optimised}.\par
 The URFD dataset contains 70 videos: (i) 30 videos of falls; and (ii) 40 videos of daily living activities, recorded from a top-down and front view perspective by two Microsoft Kinect cameras. Each frame is labeled in three categories: if the person is lying on the ground, not lying on the ground, and in an intermediate pose.\par
 The FDD dataset is composed of 191 videos, of which 143 are falls, recorded from a surveillance camera perspective by a single RGB camera. With every frame annotated between fall and not fall.\par
 To enable a comparison with other works, we evaluated our method through three metrics: (i) sensitivity, which reflects the true positive rate; (ii) specificity, also known as the true negative rate; and (iii) accuracy, which represents the overall performance of the method.\par
-We used a learning rate of $10^{−4}$ , 500 epochs, 5-fold cross-validation, mini-batches of $2^{10}$ , and Adam optimization. We also experimented with different classes and weights, however, further tuning of the hyper-parameters we were able to keep both classes on the same weight. As explained in Section~\ref{sec:classification}, a double SVM is used to ensemble the outputs.\par
-Tables~\ref{tab:urfd-ensem} and~\ref{tab:urfd-our-their} show the results obtained on the URFD dataset. In Table~\ref{tab:urfd-ensem}, we compare each single-stream feature with their multi-stream counterpart. The optical flow single-stream acquired the highest accuracy, at 97.57\%, and the multi-stream was still able to outperform it, at 98.84\%. Table~\ref{tab:urfd-our-their} compares our result with other works in the literature, whilst not all works measured their sensitivity and specificity, all of them reported their accuracy.\par
+We used a learning rate of $10^{−4}$ , 500 epochs, 5-fold cross-validation, mini-batches of $2^{10}$ , and Adam optimization. We also experimented with different classes weights, however, further tuning of the hyper-parameters we were able to keep both classes on the same weight. As explained in Section~\ref{sec:classification}, a double SVM is used to ensemble the outputs.\par
+Tables~\ref{tab:urfd-ensem} and~\ref{tab:urfd-our-their} show the results obtained on the URFD dataset. In Table~\ref{tab:urfd-ensem}, we compare each single-stream feature with their multi-stream counterpart. The optical flow single-stream acquired the highest accuracy, at 97.57\%, however, the multi-stream was still able to outperform it, at 98.84\%. Table~\ref{tab:urfd-our-their} compares our result with other works in the literature, whilst not all works measured their sensitivity and specificity, all of them reported their accuracy.\par
 The accuracy and specificity of our method performed better than most and kept the same 100\% sensitivity. The approach developed by Lu et al.~\cite{lu2018deep} was the only work that outperformed ours. We conjecture that the reason for such is the temporal importance to detect a fall event, and their usage of LSTM would better cater this relationship.\par
-Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} report the results extracted from the FDD dataset. Homologous to the URFD report, Table~\ref{tab:fdd-ensem} compares each single-stream with the multi-stream approach. The multi-stream achieved 99.51\% accuracy, and the highest single-stream score was again the optical flow, with 99.11\%. When comparing our results against the literature, in Table~\ref{tab:fdd-our-their}, ours outperformed every other one, regarding accuracy and sensitivity. It was 0.05\% worse than Charfi et al.'s~\cite{charfi2013optimised} specificity. Our results also confirmed the findings of Wang et al.~\cite{wang2015towards} since each feature stream did not perform great on their own, however, when applied together, they contributed to the state-of-the-art results towards fall detection.
 \begin{table*}[]
 \centering
 \caption{Results on URFD dataset for single-stream \textit{vs} multi-stream (descending order of accuracy).}
@@ -191,6 +190,7 @@ Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} report the results extrac
  & N\'u\~nez-Marcos et al.~\cite{nunez2017vision}       & 99.0              & 97.00             & 97.00             & \\ \hline
 \end{tabular}
 \end{table*}
+Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} report the results extracted from the FDD dataset. Homologous to the URFD report, Table~\ref{tab:fdd-ensem} compares each single-stream with the multi-stream approach. The multi-stream achieved 99.51\% accuracy, and the highest single-stream score was again the optical flow, with 99.11\%. When comparing our results against the literature, in Table~\ref{tab:fdd-our-their}, ours outperformed every other one, regarding accuracy and sensitivity. It was 0.05\% worse than Charfi et al.'s~\cite{charfi2013optimised} specificity. Our results also confirmed the findings of Wang et al.~\cite{wang2015towards} since each feature stream did not perform great on their own, however, when applied together, they contributed to the state-of-the-art results towards fall detection.
  
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
@@ -211,57 +211,3 @@ Omitted for blind review.
 \bibliography{paper}
 
 \end{document}
-
-%  3. Comments to authors
-
-%     Fall Detection in Video Sequences Based on a Three-Stream Convolutional Neural Network
-
-
-%     This paper proposes and evaluates the multi-stream approach for fall detection applications. Fall detection is an important and challenging application. This paper applies the standard technique used in action recognition for fall detection and shows strong results in two datasets URFD and FDD.
-
-%     Pros:
-%     The proposed approach gives decent results in two fall detection dataset.
-
-%     The proposed multi-stream approach is technically sound, and I also appreciate the ablation study results.
-
-%     Cons:
-%     I think this paper does not address the cross-dataset problem. Ideally, it would be better to train the model on one or two scenarios but test on the other unseen situations. This evaluation helps to understand if the proposed approach can generalize well for practical use.
-
-%     The other problem with the proposed approach is the lack of an important technical justification. It seems that the saliency map is an interesting attemp. But I am wondering why there is no evaluation on the foreground subtraction, which appears to be more common than the saliency map.
-
-%     Regarding the technical choice, I think SVM with the pre-trained imagenet features is a bit out of the dated technique. The current action recognition technique often involves end-to-end training, which would be useful to evaluate.
-
-%     I concern the metrics used in this paper too. Why is the only accuracy used? Ideally, precision and recall would be useful. In other action recognition papers, precision@1 and precision@5 are often used too.
-
-% 3. Comments to authors
-
-%     The authors propose a multi-stream method (optical flow, saliency map, RGB data) to detect fall events. Firstly, optical flow, saliency map, RGB data are extracted to fed a VGG-16, respectively. Then an SVM is used to classify whether there was a fall event. They demonstrate the efficacy of the proposed model on two datasets.
-
-%     However, there are some questions.
-
-%     # Why use SVM instead of direct neural network to supervise learning.
-
-%     #Why use two SVMs, the features of three streams can be concatenated, and use an SVM to classify.
-
-%  3. Comments to authors
-
-%     In this paper, the authors proposed the use of a deep learning approach to detect fall events. In order to detect the falls, the authors came up with a set of handcrafted features and used in conjunction with VGG-16 architecture. A SVM is used as a final classification layer on top of the VGG-16 outputs. Finally, different sets of architectures are trained and compared in terms of performance.
-
-%     Good Points:
-
-%     1. The problem formulation and the motivation behind the proposed work is interesting. All the sections are well written with minimal grammatical errors.
-
-%     2. A well described background on optical flow, saliency map and transfer learning.
-%     Experimentation setup and hyperparameters are detailed in a very clear and transparent manner.
-
-%     3. The proposed approach was experimented on two publicly available datasets and the results are compared properly compared against the other existing methods in the literature.
-
-%     Comments to Address:
-
-%     1. No theoretical evidence was provided regarding why SVM was used as the final classification layer. Have you tried adding a few extra concatenation layers at the end for merging the three networks instead of SVM, thereby resulting in a more efficient backpropagation?
-
-%     2. It would be interesting to know if the authors have explored any other architectures instead of VGG-16, which might be more suitable for these features.
-
-%     3. It would be better to add statistical test results in order to verify the statistical significance of the proposed method over the other methods.
-
-%     Overall, I would recommend this paper as an accept, and the paper could be improved by adding a bit of theoretical evidence on the proposed work and describing about the pros and cons of the alternative approaches, and also by adding statistical significance results.
