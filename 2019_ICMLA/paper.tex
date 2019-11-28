@@ -193,11 +193,11 @@ The accuracy and specificity of our method performed better than most and kept t
  &                                                      & Sensitivity (\%)  & Specificity (\%)  & Accuracy (\%)     & \\ \hline
  & Lu et al.~\cite{lu2018deep}                          & -                 & -                 & \textbf{99.27}    & \\
  & Ours                                                 & \textbf{100}      & \textbf{98.77}    & 98.84             & \\
- & Carneiro et al.~\cite{carneiro2019multi}                                                 & \textbf{100}      & \textbf{98.61}    & 98.77             & \\
+ & Carneiro et al.~\cite{carneiro2019multi}                                                 & \textbf{100}      & 98.61    & 98.77             & \\
  & Panahi et al.~\cite{panahi2018human}                 & 97.05             & 97.02             & 97.14             & \\
  & Zerrouki and Houacine~\cite{zerrouki2018combined}    & -                 & -                 & 96.88             & \\
  & Harrou et al.~\cite{harrou2017vision}                & -                 & -                 & 96.66             & \\
- & Abobakr et al.~\cite{abobakr2017skeleton}            & \textbf{100}      & 0.91              & 96.00             & \\
+ & Abobakr et al.~\cite{abobakr2017skeleton}            & \textbf{100}      & 91.00              & 96.00             & \\
  & Bhandari et al.~\cite{bhandari2017novel}             & 96.66             & -                 & 95.71             & \\
  & Kwolek and Kepski~\cite{kwolek2015improving}         & \textbf{100}      & 92.50             & 95.71             & \\
  & N\'u\~nez-Marcos et al.~\cite{nunez2017vision}       & \textbf{100}      & 92.00             & 95.00             & \\
@@ -226,10 +226,10 @@ The accuracy and specificity of our method performed better than most and kept t
 \begin{tabular}{llcccl}
 \hline
  &                                                      & Sensitivity (\%)  & Specificity (\%)  & Accuracy (\%)     & \\ \hline
- & Ours                                                 & \textbf{99.43}    & 99.55             & \textbf{99.51}    & \\
+ & Ours                                                 & 99.43    & 99.55             & \textbf{99.51}    & \\
  & Lu et al.~\cite{lu2018deep}                          & -                 & -                 & 99.36             & \\
  & Sehairi et al.~\cite{sehairi2018elderly}             & -                 & -                 & 98.91             & \\
- & Carneiro et al.~\cite{carneiro2019multi}                                                 & \textbf{99.9}      & \textbf{98.32}    & 98.43             & \\
+ & Carneiro et al.~\cite{carneiro2019multi}                                                 & \textbf{99.9}      & 98.32    & 98.43             & \\
  & Zerrouki and Houacine~\cite{zerrouki2018combined}    & -                 & -                 & 97.02             & \\
  & Harrou et al.~\cite{harrou2017vision}                & -                 & -                 & 97.02             & \\
  & Charfi et al.~\cite{charfi2012definition}            & 98.0              & \textbf{99.60}    & -                 & \\
@@ -244,7 +244,7 @@ Tables~\ref{tab:fdd-ensem} and~\ref{tab:fdd-our-their} report the results extrac
 
 In this paper, we proposed a method to detect human fall events, based on the employment of a multi-stream convolutional neural network. Each stream was served an extracted feature, as follows: (i) optical flow, (ii) saliency map, and (iii) the RGB frame itself. The double SVM performed the ensemble approach. The proposed method was evaluated on the RFD and FDD datasets. Our solution outperformed the related literature in most cases, indicating that multi-stream approaches and the selected features can be useful to detect human fall events.
 
-It is worth discussing the selected features and some literature results. As et al.~\cite{chernbumroong2012elderly} noticed that privacy concerns might arise on video-based approaches, the selected features can conceal one's identity. Despite their feature performance, both optical flow and saliency map are timely and computationally intensive to extract, which would halt their implementation in a real-time system.
+It is worth discussing the selected features and some literature results. As Chernbumroong et al.~\cite{chernbumroong2012elderly} noticed that privacy concerns might arise on video-based approaches, the selected features can conceal one's identity. Despite their feature performance, both optical flow and saliency map are timely and computationally intensive to extract, which would halt their implementation in a real-time system.
 
 Considering the goal of this work in exploring features to the fall detection problem, it is relevant to weight their extraction process against their results. Regarding other works in the literature, some seemed to dismiss the importance of the sensitivity metric, which quantifies the avoidance of false negatives. A World Health Organization report~\cite{who2007report} enlightens the severity of an elderly fall, thus the importance of a high sensitivity metric.
 
